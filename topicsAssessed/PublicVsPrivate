@@ -1,0 +1,11 @@
+PUBLIC VS PRIVATE ACCESS MODIFIERS
+
+- Describe the difference between public and private access modifiers.
+
+PUBLIC ACCESS
+Field vars are accessible anywhere within the class.
+Interface is accessible anywhere in its package.
+Class is accessible anywhere in its package.
+
+PRIVATE ACCESS
+The object is accessible only within the class it was declared.

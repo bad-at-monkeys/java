@@ -1,0 +1,23 @@
+INSTALLING ORACLE JAVA 8
+
+Download the tarball from Oracle, then extract it:
+$ cd Downloads
+$ tar xvf jdk-8u221-linux-x64.tar.gz --directory /usr/lib/jvm/
+
+
+Check the java and javac versions:
+$ /usr/lib/jvm/jdk1.8.0_221/bin/java -version
+$ /usr/lib/jvm/jdk1.8.0_221/bin/javac -version
+
+
+Set the default JDK by adding Java 8 to the alternatives
+system and then selecting it:
+$ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.8.0_221/bin/java 1
+$ sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.8.0_221/bin/javac 1
+$ sudo update-alternatives --config java
+$ sudo update-alternatives --config javac
+
+
+Verify::
+$ java -version
+$ javac -version

@@ -1,0 +1,14 @@
+VERSION CONTROL
+
+State the purpose of a version control system.
+
+To collaborate with others on a project while maintaining version history
+  in an accessible, systematic, and predictable way.
+  
+  
+State the purpose of the commit, pull, and clone commands.
+
+commit - to commit to the changes made on the project and submit them.
+pull - used to download content from a remote repository and immediately
+         update the local repository to match it.
+clone - used to target and create a copy of a repository.

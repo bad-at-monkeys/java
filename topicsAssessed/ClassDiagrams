@@ -1,0 +1,25 @@
+CLASS DIAGRAMS
+
+- Translate a class diagram into code that describes public vs. private methods, 
+  constructors, primitive and references fields, composition, but does not describe 
+  inheritance, package-default or protected visibility.
+  
+  
+--------------------------------------
+            Student
+--------------------------------------
+      -name:String
+      -age:int
+      -gender:char
+      -studentID:int
+--------------------------------------
+      +getName():String
+      +getAge():int
+      +getGender:char
+      +getStudentID:int
+      +setName(name):void
+      +setAge(age):void
+      +setGender(gender):void
+--------------------------------------
+
+See Student.java

@@ -1,0 +1,53 @@
+ENCAPSULATION WITH GETTERS AND SETTERS
+
+See Bicycle.java or Student.java
+
+- Implement an instance method (getter) that reads the value of one of its class instance vars.
+- Implement an instance method (setter) with a reference to the current obj using 'this.'
+- Implement an instance method (could be a setter) that modifies the value of a class instance var.
+
+ public class Person {
+     // instance vars
+     private String name;
+     private int age;
+     
+     // constructors
+     public Person() { }
+     public Person(String name, int age) {
+         this.name=name;
+         this.age=age;
+     }
+     
+     // getters
+     public String getName() {
+         return name;
+     }
+     public int getAge() {
+         return age;
+     }
+     
+     // setters
+     public void setName(String name) {
+         this.name=name;
+     }
+     public void setAge(int age) {
+         this.age=age;
+     }
+     
+     public static void main(String[] args) {
+         // instantiate Person obj
+         Person a = new Person("John", 26);
+         
+         // read val of instance vars
+         System.out.println(a.getAge());
+         System.out.println(a.getName());
+         
+         // modify the vals of the instance vars
+         a.setAge(32);
+         a.setName("James");
+         
+         // read again to confirm their change
+         System.out.println(a.getName());
+         System.out.println(a.getAge());
+     }
+ }

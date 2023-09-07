@@ -1,0 +1,104 @@
+TIME/SPACE COMPLEXITY
+
+TIME COMPLEXITY
+The time required by the algorithm to solve a given problem.
+
+The time complexity of an algorithm quantifies the amount of time taken by an
+algorithm to run as a function of the length of the input.
+
+Therefore, we must consider the cost of each fundamental instruction and the
+frequency at which is executed.
+
+NOTE: The time to run is a function of the length of the input and not related
+        to the actual execution time of the machine on which the program is
+          running.
+          
+public static int addTwo(int a, int b) {
+    return a + b;
+}
+
+The addTwo method requires one addition operation, therefore the time
+complexity of the algorithm is T(n) = O(1).
+
+
+
+          
+
+SPACE COMPLEXITY
+The amount of memory needed for the completion of an algorithm.
+
+The space complexity of an algorithm quantifies the amount of space taken by
+an algorithm to run as a function of the length of the input.
+
+c <- a + b
+
+The addition of a and b requires one extra memory location to hold c.
+Thus the space complexity of this algorithm is constant, O(1).
+
+
+
+
+	public static void countFreq(int[] arr, int n) {
+		// create an empty array of n length to store the freq count
+		boolean[] visited = new boolean[n];
+		
+		// assign a boolean val to each element in the array of booleans
+		Arrays.fill(visited, false);
+		
+		// traverse through array and count the freqs
+		for(int i=0; i<n; i++) {
+			// skip if already visited
+			if(visited[i]==true)
+				continue;
+			
+			// count freq
+			int count = 1;
+			for(int j=1+1; j<n; j++) {
+				if(arr[i]==arr[j]) {
+					visited[j]=true;
+					count++;
+				}
+			}
+			System.out.println(arr[i]+" appears "+count+" times in the array.");
+		}
+	}
+	
+Time complexity: O(n^2)
+Space complexity: O(n)
+
+
+
+	static void countFreq(int arr[], int n)
+    {
+        Map<Integer, Integer> mp = new HashMap<>();
+ 
+        // Traverse through array elements and
+        // count frequencies
+        for (int i = 0; i < n; i++)
+        {
+            if (mp.containsKey(arr[i]))
+            {
+                mp.put(arr[i], mp.get(arr[i]) + 1);
+            }
+            else
+            {
+                mp.put(arr[i], 1);
+            }
+        }
+        // Traverse through map and print frequencies
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet())
+        {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+    }
+ 
+    // Driver code
+    public static void main(String args[])
+    {
+        int arr[] = {10, 20, 20, 10, 10, 20, 5, 20};
+        int n = arr.length;
+        countFreq(arr, n);
+    }
+    
+Time complexity: O(n)
+Space compleity: O(n)

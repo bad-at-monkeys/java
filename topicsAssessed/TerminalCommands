@@ -1,0 +1,26 @@
+TERMINAL COMMANDS
+
+Navigate folders in the file system using terminal commands using cd.
+
+
+List folder contents on the file system using ls.
+
+
+Create, delete, rename, copy and move folders on the file system.
+mkdir [dir]
+rm -r [dir]
+mv [current-name] [new-name]
+cp [source] [dest]
+mv [opt] [source] [dest]
+
+
+Create, delete, rename, copy and move files on the file system.
+touch [file]
+rm [file]
+mv [current-name] [new-name]
+cp [source] [dest]
+mv [opt] [source] [dest]
+
+
+Use man pages to understand how terminal commands work.
+man [command]

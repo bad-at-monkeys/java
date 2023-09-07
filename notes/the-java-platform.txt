@@ -1,0 +1,46 @@
+THE JAVA PLATFORM
+
+The components that make up the Java Runtime Environment (JRE):
+  -> Java Application Programming Interface (API)
+  -> Java Virtual Machine (JVM)
+  
+ -------------
+|             |
+| Application |
+|_____________|
+     |
+     |
+     |
+     ----->  -------
+            |       | 
+            | javac |
+            |_______|
+               |
+               |
+               |
+               ----->  ----------
+                      |          |
+                      | bytecode |
+                      |__________|
+                         |
+                         |
+                         |
+                         ----->  ------
+                                |     |
+                                | jvm |
+                                |_____|
+                                  |
+                                  |
+                                  |
+                                  -----> ----------
+                                         |         |
+                                         | machine |
+                                         | code    |
+                                         |_________
+                                            |
+                                            |
+                                            |
+                                            ----->  -------------
+                                                   |             |
+                                                   | Hardware/OS |
+                                                   |_____________|

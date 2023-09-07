@@ -1,0 +1,179 @@
+OBJECT-ORIENTED PROGRAMMING
+
+The four pillars of OOP:
+  Abstraction
+  Encapsulation
+  Inheritance
+  Polymorphism
+  
+  
+OOP is just a style of organizing code:
+  Tries to mimic real world "objects".
+  Objects are software bundles of data and related procedures.
+
+Objects have things such as attributes(states) and methods(behavior).
+
+
+OOP enables the use of object abstractions that assist the programmer
+with creating real-world applications. If we can relate our abstractions
+with solving real-world issues, we can program real-world applications.
+
+
+OOP advantages:
+  more extensible/modular
+  easy maintenance
+  provides better organization for code reuse and library functionality
+  
+  
+
+---
+OBJECTS VS PRIMITIVES
+
+There are 8 primitive data types:
+  byte  short  int  long  float  double  boolean  char
+  
+Everything in Java is an object besides primitives.
+
+
+Instantiating an object:
+
+Circle c = new Circle;
+
+Scanner sc;    // doesn't exist yet
+sc = new Scanner(System.in);    // object now exists (is instantiated)
+
+
+
+---
+STACK & HEAP
+
+In the memory managed by the JVM, object references and the objects assigned
+to them are managed by stacks and the heap.
+
+Stacks are lists of references defined within a scope.
+  Code blocks are how scope is structured within a program.
+  References in different stacks can point to the same objects in the heap.
+  
+The heap is where all objects are actually stored in memory.
+
+
+Using Objects
+
+public class Point {
+    int x;
+    int y;
+    
+    public Point() { };
+    
+    public Point(int x, int y) {
+        this.x=x;
+        this.y=y;
+    }
+    
+    public static void main(String[] args) {
+        Point p = new Point(3,5);    // with the param-constructor
+        
+        Point p2 = new Point();    // with the default constructor
+        p2.x = 2;
+        p2.y = 5;
+    }
+}
+
+All objects must have at minimum one constructor (the default constructor is created automatically).
+
+NOTE: Constructor methods can only be called during instantiation.
+
+
+
+Creating Object Types
+
+An object type is called a class.
+  -> a class defines that data objects of that type can store and what functions they can perform.
+  -> a class is a template for object creation
+  -> an object is really an instance of a class
+  -> Many object instances can be generated from one class
+  
+NOTE: Each file may only contain one "public" top level class.
+
+  -> other top level classes may be added to the same file, but they must not list
+     an access modifier (the one with the access modifier is the filenaem)
+     
+     
+package topicsAssessed;
+
+public class Car {
+    // instance vars
+	String color;
+	String type;
+	
+	// constructors
+	public Car() { }
+	
+	public Car(String color, String type) {
+		this.color=color;
+		this.type=type;
+	}
+	
+	// member methods
+	public static void start() {
+		System.out.println("Get Started!");
+	}
+	
+	public void printDescription() {
+		System.out.println("This is a "+color+" "+type);
+	}
+	
+	// main method
+	public static void main(String[] args) {
+		Car raceCar = new Car("red","corvette");
+		System.out.println(raceCar.color+" "+raceCar.type);
+
+	}
+
+}
+
+
+
+    public class Car {
+        String type = "Sedan";
+        String color = "Silver";
+        void Car( String color, String type ) {
+            System.out.println("The car is a " + color + " " + type);
+        }
+    }
+    
+    then we try to instantiate a car object:
+    Car myCar = new Car();
+    
+    What is the output?
+      -> there is no output because a constructor is called,
+         and constructors don't return values.
+         
+           what was intended to be the Car constructor was accidentally turned
+           into a method by adding a return type. Since a constructor is invoked
+           during object instantiation, the method void Car(String color, String type) is
+           not executed...that means there isn't any output.
+
+
+NOTE: If we create another constructor, Java discards the default constructor.
+      So we should typically define a no-arg constructor with our parameterized
+      one for backward compatibility.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

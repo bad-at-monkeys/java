@@ -1,0 +1,19 @@
+COMPILATION AND EXECUTION
+
+We run the program through javac to first compile it:
+$ javac HelloWorld.java
+
+We get a class file out of it.
+$ ls
+HelloWorld.class    HelloWorld.java
+
+The class file can be distributed to other machines to compile a .java file.
+
+Now run the program with java and it prints to STDOUT:
+$ cd ..
+$ java topicsAssessed.HelloWorld
+Hello World
+
+
+The source is HelloWorld.java,
+once compiled into bytecode it becomes HelloWorld.class
