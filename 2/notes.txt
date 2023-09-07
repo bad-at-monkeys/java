@@ -1,0 +1,561 @@
+javajavajava - notes
+
+We are starting these notes a little late at 2.4 Class Definition
+https://runestone.academy/ns/books/published/javajavajava/sec-classdef.html
+
+
+
+++++++++++
+2.4 Class Definition
+
+To design an object we need to answer five basic questions:
+  -> What role will the object perform in the program?
+  -> What data or information will it need?
+  -> What actions will it take?
+  -> What interface will it present to other objects?
+  -> What information will it hide from other objects?
+
+Refer to the Riddle class in riddleProgram.
+
+
+
+-----
+2.4.4 EFFECTIVE DESIGN: Public Methods
+
+The public methods and variales make up an objects interface.
+  Public methods can be used and accessed by other objects.
+
+
+
+-----
+2.4.2 The RiddleUser Class
+
+We seperate the main() method and the Riddle class
+  to get into the habit of placing a distinction between
+    the user interface(RiddleUser) and computational object(Riddle).
+
+
+
+-----
+2.4.5 Define, Create, Use
+
+Writing a Java program is a matter of three basic steps:
+  -> Class Definition
+       Define one or more classes.
+  -> Object Instantiation
+       Create objects and instances of the classes.
+  -> Object Use
+       Use the objects to do tasks.
+
+
+
+-----
+2.7 java.util.Scanner
+
+The java.util.Scanner class handles keyboard input.
+
+import java.util.Scanner;
+public class TestScanner
+{
+  public static void main(String[] args)
+  {               
+    Scanner sc = new Scanner(System.in);   // Create Scanner object
+    System.out.print("Input an integer:"); // Prompt
+    int num = sc.nextInt();                // Read an integer
+    System.out.println(num + " squared = " + num * num);
+  } //main()
+} // TestScanner class
+
+
+Input an int: 
+22
+22 squared equals 484
+
+
+After we create the Scanner object, we make the call to nextInt()
+  which reads the next integer to be input.
+
+
+
+++++++++++
+Chapter 2 Exercises
+
+---
+1) Consider the transaction of asking your professor for your grade
+     in your computer science course. Identify the objects in this
+       transaction and the types of messages that would be passed
+         among them.
+
+Objects = me, professor, grade
+Messages = set grade, get grade
+
+
+
+---
+2) Now automate the transaction for the professor.
+     Design a program that looks up a students grade. The program should
+       let a student type in his or her name and ID number and the program
+         then should display his or her grades for the semester,
+	   with a final average.
+	     Grades:
+	       -> 5 quizes
+	       -> 3 exams
+	       -> 2 labs
+	     Identify the objects in this program and the types of messages that
+	       would be passed between them.
+
+
+See getGrades.Student
+
+
+
+---
+3) In RiddleUser class, give two examples of object intantiation, explain.
+
+Scanner sc = new Scanner(System.in);
+
+Here we are creating a new Scanner object called sc that takes input from STDIN.
+
+
+Riddle r2 = new Riddle("What is at the end of a rainbow?", 
+		               "w.",
+		               "Doesn't start with a 'g'.");
+
+Creating a new Riddle object names r2 that is constructed by three strings.
+
+
+
+---
+4) Explain the difference between a method definition and a method call.
+
+A method definition are the parameters within the method body.
+
+public void setHint(String hint) {
+	this.hint = hint;
+}
+
+
+A method call is when we are calling the method for use:
+
+System.out.println(r.getQuestion());
+
+
+
+---
+5) In RiddleUser, identify three examples of method calls and explain.
+
+System.out.println(r.getQuestion());
+System.out.println("Hint: " + r.getHint());
+System.out.println(r.getAnswer());
+
+These are all method calls that get specified data.
+
+
+
+---
+6) Describe how the slogan "define, create, manipulate" applies to the
+     Riddle example.
+
+When building the Riddle class we defined and created instance variables,
+  a constructor, and methods.
+
+We then used a RiddleUser class with a main method to create and
+  manipulate new instances of Riddle objects.
+
+
+
+---
+7) An identifier is the name for a -----, -----, or a -----.
+
+class
+
+method
+
+variable
+
+
+
+---
+8) Which of the following would be valid identifiers?
+
+Int
+Private
+Joe
+j1
+Boolean
+
+
+
+---
+9) Explain the difference between a class variable and an instance variable.
+
+An instance variable is any field declared without the static modifier.
+  Instance variables are associated with instances of the class.
+    Instance fields hold the state of an object; the value of those fields
+      make one object different from another.
+
+Instance variables/members/fields are associated with individual instances
+  of the class (i.e. objects).
+
+
+Class variables/members/fields are declared with the static modifier and are
+  associated with the class itself.
+
+
+
+---
+10) Identify any syntax errors in each declaration:
+
+public boolean isEven;
+none
+
+Private boolean isEven;
+Private -> private
+none
+
+private boolean idOdd
+statement open, add semi-colon to end.
+
+public boolean is Odd;
+remove space after is
+
+string S;
+string -> String
+
+public String boolean;
+boolean is a reserved Java identifier
+
+private boolean even = 0;
+invalid data type; true or false are boolean values
+
+private String s = helloWorld;
+helloWorld -> "helloWorld"
+
+
+
+---
+11) Write declarations for each of the following instance variables -
+
+A private boolean variable named bool that has an initial value of true.
+private boolean bool = true;
+
+
+A public String variable named str that has an initial value of "hello".
+public String str = "hello";
+
+
+A private int variable named nEmployees that is not assigned an initial value.
+private int nEmployees;
+
+
+
+---
+14) Create the AddNums class and add statements to its main() method  to create
+      two instances of this class names adder1 and adder2. Set their numbers
+        when instantiating the new objects and call the getSum method on them.
+
+package mathMethods;
+
+public class AddNums {
+	
+	private int num1;
+	private int num2;
+	
+	AddNums(int n1, int n2) {
+		num1 = n1;
+		num2 = n2;
+	}
+
+	public int getSum() {
+		return num1 + num2;
+	}
+	
+	public static void main(String[] args) {
+		AddNums adder1 = new AddNums(10, 15);
+		System.out.println(adder1.getSum());
+		
+		AddNums adder2 = new AddNums(100, 200);
+		System.out.println(adder2.getSum());
+	}
+
+}
+
+
+
+---
+15) What are the names of the instance fields and methods in NumberAdder?
+      Identify three expressions that occur and two assignment statments.
+
+Instance fields:
+  private int num1
+  private int num2
+
+Instance methods:
+  getSum()
+
+Constructor:
+  AddNums()
+
+
+
+---
+16) Explain the difference between the pairs of concepts:
+
+-> A method definition and a method call.
+     A method definition describes the implementation, the method call
+       is when the object executes the implementation.
+
+-> Declaring a variable of reference type and creating an instance.
+     Declaring a variable of reference type is simply creating a pointer to
+       the implied object.
+         Instantiating an object means creating a different object of that class
+	   to be used.
+
+-> A variable of reference type and a variable of primitive type.
+     A variable of reference type is a pointer to an actual object in memory
+       and user defined.
+         A variable of primitive type is a data type that is built-in to Java
+	   and the declared value is what is stored in memory.
+
+
+
+---
+17) Define Java class NumberCruncher that has a single int variable as its only
+      instance variable. Then define these methods: get, double, triple,
+        square, and cube. Set the initial value of the number with a
+	  constructor. Add a main() method at the end.
+
+package mathMethods;
+
+public class NumberCruncher {
+	// the instance variable
+	private int num;
+	
+	// the constructor
+	NumberCruncher(int n) {
+		num = n;
+	}
+	
+	// the getter
+	public int getNum() {
+		return num;
+	}
+	
+	// double, triple, square, and cube
+	public int doubleNum() {
+		return num * 2;
+	}
+	
+	public int tripleNum() {
+		return num * 3;
+	}
+	
+	public int squareNum() {
+		return num * num;
+	}
+	
+	public int cubeNum() {
+		return num * num * num;
+	}
+
+	public static void main(String[] args) {
+		
+
+	}
+
+}
+
+
+
+---
+18) Use NummberCruncher in the main() method.
+
+	public static void main(String[] args) {
+		NumberCruncher nc = new NumberCruncher(2);
+		System.out.println(nc.getNum());
+		System.out.println(nc.doubleNum());
+		System.out.println(nc.tripleNum());
+		System.out.println(nc.squareNum());
+		System.out.println(nc.cubeNum());
+
+	}
+
+
+
+---
+19) Write a Java class definition for a Cube oobject. It shall have a int
+      attribute for the length of its side. The object should be capable of
+        reporting its surface area and volume. The surface area of a cube is
+	  six times the area of any side. The volume is calculated by cubing
+	    the side.
+
+package mathMethods;
+
+public class Cube {
+	private int length;
+	
+	Cube(int l) {
+		length = l;
+	}
+	
+	public int surfaceArea() {
+		return ((length * length) * 6);
+	}
+	
+	public int volume() {
+		return (length * length * length);
+	}
+	
+	public static void main(String[] args) {
+		Cube cu = new Cube(2);
+		System.out.println("Surface area: "+cu.surfaceArea());
+		System.out.println("Volume: "+cu.volume());
+
+	}
+
+}
+
+
+
+---
+20) Write Java class definition for a CubeUser object that will use the Cube
+      object we just defined. This class should create three Cube instances,
+        each with a different side and then report their surfaceArea and volumes.
+
+package mathMethods;
+import java.util.Scanner;
+
+public class Cube {
+	private int length;
+	Scanner keyboard = new Scanner(System.in);
+	
+	// default constructor
+	Cube() {
+		
+	}
+	
+	// constructor requiring a int parameter
+	Cube(int l) {
+		length = l;
+	}
+	
+	public int getLength() {
+		return length;
+	}
+	
+	public void setLength(int length) {
+		this.length = length;
+	}
+	
+	public int surfaceArea() {
+		return ((length * length) * 6);
+	}
+	
+	public int volume() {
+		return (length * length * length);
+	}
+	
+	/**
+	 * user inputs their own length with this method
+	 * with the default constructor
+	 */
+	public void lengthEntry() {
+		System.out.print("Enter cube side length: ");
+		length = keyboard.nextInt();
+	}
+	
+}
+
+
+package mathMethods;
+import java.util.Scanner;
+
+public class CubeUser {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
+		Cube cu1 = new Cube(2);
+		System.out.println("Surface area: "+cu1.surfaceArea());
+		System.out.println("Volume: "+cu1.volume());
+
+		Cube cu2 = new Cube(3);
+		System.out.println("Surface area: "+cu2.surfaceArea());
+		System.out.println("Volume: "+cu2.volume());
+		
+		Cube cu3 = new Cube(4);
+		System.out.println("Surface area: "+cu3.surfaceArea());
+		System.out.println("Volume: "+cu3.volume());
+		
+		Cube cu4 = new Cube();
+		cu4.lengthEntry();
+		System.out.println("Surface area: "+cu4.surfaceArea());
+		System.out.println("Volume: "+cu4.volume());
+	}
+
+}
+
+
+package humanTypes;
+
+public class Entry {
+	private String name;
+	private String address;
+	private String phoneNumber;
+	
+	// our constructors
+	Entry() {
+		
+	}
+	
+	Entry(String n, String addr, String ph) {
+		name = n;
+		address = addr;
+		phoneNumber = ph;
+	}
+
+	// the getters
+	public String getName() {
+		return name;
+	}
+	
+	public String getAddress() {
+		return address;
+	}
+	
+	public String getPhone() {
+		return phoneNumber;
+	}
+	
+	// setters
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	public void setPhone(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+	
+	public static void main(String[] args) {
+		Entry khanh = new Entry("Khanh Nguyen", "123 Bungfart ln.", "8328328322");
+		System.out.println(khanh.getName());
+		System.out.println(khanh.getAddress());
+		System.out.println(khanh.getPhone());
+
+	}
+
+}
+
+
+
+---
+Practice drawing UML diagrams..
+
+Remember the software life cycle:
+
+Specification, design, implementation, testing.

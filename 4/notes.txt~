@@ -1,0 +1,1532 @@
+Chapter 4 Input/Output: Designing the User Interface
+
+When we are designing our Java programs we want to seperate the user interface
+  from the computational object.
+
+The user interface is what transmits data back and forth to the user.
+  It constrains how the user may interact with the program.
+
+
+
++++++
+4.3 Command-line Interface
+
+Input and output is handled by streams,
+  Java programs have 3 standard stremas available at startup:
+    > System.in
+    > System.out
+    > System.err
+
+
+
+---
+Using a BufferReader to Input Strings from the Keyboard
+
+We can use a BufferReader object to handle KB input
+  and perform buffered input.
+
+A buffer is a portion of main memory where input is held
+  until it is needed by the program.
+
+
+Constructing a buffered reader that will read System.in:
+
+BufferedReader input = new BufferedReader(new InputStreamReader (System.in);
+
+We are creating two objects in this statement; we first create an
+  InputStreamReader object referencing System.in.
+
+That object is then passed to a BufferedReader.
+  The result is two objects cooperating that enable
+    reading from the keyboard.
+
+
+The creation of BufferedReader allows us to read chars from the keyboard
+  whenever we use the readLine() method.
+
+Having created  the BufferedReader named input, the following code segment
+  will read one line of input and assign it to the String variable named
+    inputString.
+
+String inputString = input.readLine();
+
+When the program encounters the readLine() expression, it will wait for the
+  user to hit the enter key. Then it will input whatever the user typed minus
+    any characters that were backspaced over, into the String variable.
+
+
+The BufferedReader.readLine() method allows the user to backspace characters
+  during keyboard input.
+
+See chapter4.Reader class
+
+
+---
+Inputting Numbers from the Keyboard
+
+If we want to input numbers, we hav to extract numbers from the input strings.
+  We must use the wrapper classes Integer and Double.
+
+A wrapper class contains methods for converting primitive data into objects
+  and for converting data from one type to another.
+
+The Integer class contains the parseInt() method, which extracs an int from
+  its String argument.
+
+Converting the String "55" into the int 55:
+
+int m = Integer.parseInt("55");
+
+
+Converting the Strintg "55.2" into the double 55.2:
+
+double num = Double.parseInt("55");
+
+
+If we are writing a program that requires us to input numbers from the keyboard,
+  assuming we have created the BufferReader object named input, we can use
+    these methods in combination with the readLine() method to input and
+      process numbers.
+
+BufferedReader input = new BufferedReader(new InputStreamReader (System.in));
+
+
+This code segment calculates a runners pace:
+
+String inputString = new String();
+System.out.println("How many total miles did you run? ");
+inputString = input.readLine();   // Input a String}
+double miles = Double.parseDouble(inputString); // Convert
+System.out.println("How many minutes did it take you? ");
+inputString = input.readLine();   // Input another String
+double minutes = Double.parseDouble(inString);  // Convert
+System.out.println("Your average pace was " + minutes/miles + " minutes per mile");
+
+
+We must input prompts so that the user knows what type of input is appropriate.
+
+
+
+---
+Designing a Keyboard Reader Class
+
+chapter4.KeyboardReader
+
+We are using the java.io.* libraries and classes for
+  BufferedReader and InputStreamReader. Import them.
+
+First we create BufferedReader instance variable called "reader" to store
+  the InputStreamReader(System.in) and the BufferedReader:
+
+private BufferedReader reader;
+
+
+
+Then we create a KeyboardReader constructor that uses the BufferedReader object
+  to perform the actual keyboard input. This is why we need the above instance
+    variable.
+
+The KeyboardReader constructor method will create a BufferedReader
+  called "reader". The resulting "reader" object will persist as long
+    as our KeyboardReader object exists.
+
+This makes reader available for all subsequent operations involving
+  KeyboardReader:
+  
+KeyboardReader() {
+    reader = new BufferedReader(new InputStreamReader(System.in);
+}
+
+
+
+Next note the definition of the readKeyboard() method.
+
+  private String readKeyboard()
+  {   String line = "";
+      try
+      {  line = reader.readLine();
+      } catch (IOException e)
+      {  e.printStackTrace();
+      }
+      return line;
+  }
+
+It calls the inherited readLine() methos to input a line from the keyboard
+  and the it returns the line.
+
+However, the call to readLine() is embedded in a try...catch block. This is
+  how our program handles any exceptions that may arise. Java requires that we
+    construct some way to address the possibility of exceptions.
+
+The reason for using a try...catch block is to hide this language detail from
+  the rest of the program.
+
+
+
+We want a class that will use a BufferedReader to read any kind of data
+  from the keyboard. So we create getters for each data type:
+
+public String getKeyboardInput() {
+    return readKeyboard();
+}
+
+public int getKeyboardInteger() {
+    return Integer.parseInt(readKeyboard());
+}
+
+public double getKeyboardDouble() {
+    return Double.parseDouble(readKeyboard());
+
+The getters use the readKeyboard() in combination with Integer.parseInt()
+  and Double.parseDouble() to extract the correct data type from the input.
+
+
+
+We need methods that generate a user interface,
+  so we define prompt() and display():
+
+public void prompt(String s) {
+    System.out.print(s);
+}
+
+public void display(String s) {
+    System.out.print(s);
+}
+
+Note that these methods do the exact same thing,
+  print the String they were passed. So why do we have two?
+
+As the names imply, these methods do two distinct things:
+  > prompt the user
+  > display output
+
+They are used at different times in the program and have differing purposes,
+  but they just happen to have the same implementation.
+
+
+
+Using a KeyboardReader object:
+
+KeyboardReader cmdline = new KeyboardReader();
+int m = cmdline.getKeyboardInteger();
+
+All we need to do is create an instance of the KeyboardReader and ask it
+  to get and integer for us.
+
+
+Lastly, there is a private method readKeyboard() in the KeyboardReader class.
+  This is the method that actually does the work of reading data from the
+    keyboard.
+
+Because it is private, it can only be called by the other methods within
+  KeyboardReader. It cannot be called by other classes. We want to hide
+    the messy implementation from the other parts of the program.
+
+Errors are a part of the messiness. Because of the existence of external errors,
+  Java requires that whenever a program performs certain types of io it must
+    watch for certain error conditions known as exceptions.
+
+So readKeyboard does that with try/catch:
+
+  private String readKeyboard()
+  {   String line = "";
+      try
+      {  line = reader.readLine();
+      } catch (IOException e)
+      {  e.printStackTrace();
+      }
+      return line;
+  }
+
+
+
+---
+Designing a Command-Line Interface
+
+We have deined our special class for performing keyboard input,
+  now we use it as a UI in cooperation with the other objects
+    to make a complete program.
+
+The UI serves as the intermediary between the user and
+  and some computational object.
+
+Focusing on the UI, we create a program that prompts the user for
+  their name and then greets them, the IO should look like:
+
+Hi, please input your name here > Kim
+  Hi Kim, nice to meet you.
+
+
+In our design we use two primary objects:
+  -> KeyboardReader, the user interface
+  -> computational object, the main() method and the algorithm
+       a KeyboardReader will be used to handle its io needs.
+
+Dividing the labor enables the use of the KeyboardReader object
+  with almost any Java application.
+
+Also, our computational object can serve as a template for future programs.
+
+Both parts of our program are portable and have potential for easy extension.
+
+
+
+The GreeterApp implementation:
+
+public class GreeterApp
+{   private KeyboardReader reader;
+    public GreeterApp()
+    {   reader = new KeyboardReader();
+    } // GreeterApp()
+    public void run()
+    {   String name = "";
+        reader.prompt("Please input your name here > ");
+        name = reader.getKeyboardInput();
+        reader.display(greet(name) + "\n");
+    } // run()
+    public String greet(String name)
+    {   return "Hi " + name + " nice to meet you.";
+    } // greet()
+    public static void main(String args[])
+    {   GreeterApp app = new GreeterApp();
+        app.run();
+    }
+  } // GreaterApp
+
+
+Starting from the top we create the private "reader"
+  instance variable of type KeyboardReader.
+
+private KeyboardReader reader;
+
+
+"reader" will be instantiated in the constructor body,
+  creating a persistent KeyboardReader object within the
+    GreeterApp constructor.
+
+    public GreeterApp()
+    {   reader = new KeyboardReader();
+    } // GreeterApp()
+    
+
+run() encapsulates the applications algorithm.
+
+It declares the "name" String variable as "", then uses the reader.prompt()
+  method, is passed the prompt String and waits for input.
+
+Once input is entered "name" is assigned to the user input by
+  reader.getKeyboardInput().
+
+To conclude the prompt we respond to the user with the greet() method
+  with name passed as the interpolated String.
+
+The session is terminates with a return statement and a new line char.
+
+    public void run()
+    {   String name = "";
+        reader.prompt("Please input your name here > ");
+        name = reader.getKeyboardInput();
+        reader.display(greet(name) + "\n");
+    } // run()
+    public String greet(String name)
+    {   return "Hi " + name + " nice to meet you.";
+    } // greet()
+
+
+Finally, the main() method serves to create an instance of the computational
+  object and calls its run() method.
+
+    public static void main(String args[])
+    {   GreeterApp app = new GreeterApp();
+        app.run();
+    }
+
+
+
++++++
+4.4 A GUI
+
+GUI programming requires an event-driven style of programming.
+
+
+
+---
+Java's GUI Components
+
+There are to separate but interrelated packages of GUI components:
+  -> java.awt
+  -> javax.swing
+
+The javax.swing classes supersede the java.awt classes.
+  The swing classes also start with a J.
+
+
+A typical GUI interface and the main components can be structured like:
+
+JFrame
+   |__ Prompt:JLabel
+   |__ Input:JTextField
+   |__ Display:JTextArea
+   |__ Convert:JButton
+
+JFrame, the top-level container that holds all the GUI components.
+JLabel, a string of displayed text.
+JTextField, an input element that can hold a single line of text.
+JTextArea, an output component that can display multiple lines of text.
+JButton, a control element allowing user driven events to occur.
+
+
+Swing components use a object oriented design known as the
+  model-view-controller architecture.
+
+The MVC architecture lets us use more features in Swing than awt.
+  For example, an AWT Button can only be labeled with a String,
+    a Swing JButton can use an image as a label.
+
+
+Swing components are also written entirely in Java making them portable.
+
+
+
+---
+Class Inheritance: Extending a Superclass
+
+Class inheritance is the mechanism by which a class of objects can inherit
+  the methods and variables of its superclasses.
+
+An object's combined attributes and behaviors are called its functionality.
+  So we say an object of a subclass inherits the functionality of all
+    of its superclasses.
+
+A subclass specializes its superclass.
+
+
+In order to implement GUI programs, we need to learn how to definw a new
+  class by extending an existing class.
+
+For example, the GreeterApp class we defined is an implicit subclass of Object.
+  We can make this relationship explicit by using the extends keyword when
+    we define the GreeterApp class:
+
+public class GreeterApp extends Object { ... }
+
+The extends keyword is used to be explicit about the sub/superclass realtionships
+  within the Java class hierarchy.
+
+The sub/superclass relationship is referred to as the isa relationship.
+
+public class JFrame extends Frame { ... }
+public class Frame extends Window { ... }
+public class Window extends Container { ... }
+
+
+A top-level container is a container that cannot be added to another container;
+  it can only have components added to it.
+
+Extedning a class like this enables us to create a new class by specializing
+  an existing class.
+
+
+
+---
+Top-level Windows
+
+All of the Swing components are subclasses of the AWT Container class.
+  Swing components = Containers. They inherit the functionality of the Container
+    class.
+
+This means that Swing components can contain other GUI components.
+  This is why a JButton can contain an image or String.
+
+
+All GUI programs must be contained in a top-level container, Swing provides
+  three top-level container classes:
+    -> JFrame
+    -> JApplet (deprecated)
+    -> JDialog
+
+Our top-level window will be a JFrame.
+
+
+A JFrame encapsulates the basic functionality of a top-level window.
+
+It has a content pane where we can place other Swing components.
+  It also comes built-in with responses to user actions like adjusting
+    the frame size or closing the frame.
+
+
+Here we create a blank JFrame with a specified title:
+
+import javax.swing.*;
+public class SimpleGUI extends JFrame
+{
+    public SimpleGUI(String title)
+    {   setSize(200,150);
+        setLocation(100, 150);
+        setTitle(title);
+        setVisible(true); // Displays the JFrame
+    } // SimpleGUI()
+    public static void main(String args[])
+    {   new SimpleGUI("My GUI");
+    } // main()
+  } // SimpleGUI class
+
+The reason we are defining a subclass of JFrame instead of simply using
+  a JFrame instance is so that we can add additional functionality to our
+    subclass that is specialized for our application.
+
+EFFECTIVE DESIGN: Specialization. By creating a subclass of JFrame we can
+                    specialize its functionality for our application.
+
+SimpleGUI's main() method creates an instance of SimplGUI by invoking its
+  constructor. There is no need to use a variable because there are no further
+    references to this object in this class.
+
+For the actual SimpleGUI window to appear on the Java console,
+  we must specify a size and call its setVisible() method, which is all
+    done in the constructor method:
+
+-----------------------------------
+     JFrame                        |
+-----------------------------------|
+  +JFrame(title:String)            |
+  +getContentPane():Container      |
+  +setLayout(m:LayoutManager)      |
+  +setTitle(s:String)              |
+  +getTitle():String               |
+  +add(c:Component)                |
+  +pack()                          |
+  +show()                          |
+  +setSize(l:int, w:int)           |
+  +setLocation(x:int, y:int)       |
+-----------------------------------
+              ^
+	      |
+	      |
+	 ------------
+	| SimpleGUI |
+	------------
+
+
+The constructor illustrates how we use some of the inherited JFrame methods.
+  The figure above shows some of the methods SimpleGUI inherits frome JFrame.
+
+
+
+---
+GUI Components for Input, Output, and Control
+
+We must add components to our blank SimpleGUI top-level interface
+  to make it functional.
+
+Generally every user interface has three types of functions:
+  input, output, and control. The compnents we add to the top-level
+    interface will correspond with these functions.
+
+JTextField is an input component.
+JTextArea and JLabel are output components.
+JButton is a control component.
+
+Here are some constructors and public methods for those components:
+
+----------
+JButton   |
+----------
++JButton(text:String)
++addActionListener(al:ActionListener)
++setEnabled(b:boolean)
+
+
+----------
+JLabel    |
+----------
++JLabel(text:String)
+
+
+----------
+JTextField|
+----------
++JTextField(col:int)
++JTextField(text:String)
++getText():String
++addActionListener(al:ActionListener)
++setEnabled(b:boolean)
+
+
+----------
+JTextArea |
+----------
++JTextArea(row:int,col:int)
++append(text:String)
++setText(text:String)
+
+
+This is how we use those constructors to instantiate these components:
+
+// Declare instance variables for the components
+private JLabel prompt;
+private JTextField inField;
+private JTextArea display;
+private JButton goButton;
+
+// Instantiate the components
+prompt = new JLabel("Please type your name here: ");
+inField = new JTextField(10);   // 10 chars wide
+display = new JTextArea(5, 20);// 5 rows x 20 columns
+goButton = new JButton("Click here for a greeting!");
+
+
+
+---
+Adding GUI Components to a Top-Level Window
+
+We use the Java's Container class add() methods to insert
+  components into a container:
+
+add(Component comp)    // add comp to end of container
+add(Component comp, int index)    // add comp at index
+add(String region, Component comp)    // add comp at region
+
+
+Which add() method we use depends on the layout of the container.
+  The layout manager is what controls the container layout.
+
+The default layout manager we will use is FlowLayout,
+  where components are added in order:
+
+setLayout(new FlowLayout(FlowLayout.LEFT));
+
+
+
+---
+Controlling the GUIs Action
+
+With placement complete, we must now focus on the GUI controls
+  through event-driven programming.
+
+Events are generated by the computers hardware and filtered up through
+  the operating system and the application programs.
+
+Events are handles by objects called listeners.
+
+
+A listener is a specialist that monitors constantly
+  for a certain type of event.
+
+Some listeners are handled by the OS, some are handled by the application.
+
+
+To click a JButton, we need our program to listen for an ActionEvent.
+  When the button is clicked, Java creates an ActionEvent object which
+    contains important information about the event, such as time and the
+      object (JButton).
+
+The program should input the users name from JTextField and display a greeting.
+  To achieve all of this we use this code:
+
+String name = inField.getText();
+display.setText("Hello "+name+"\n");
+
+
+The first line gets the text from JTextField and stores it
+  in the local variable name.
+
+The second line sets the text in the JTextArea with a new line.
+
+
+
+---
+The ActionListener Interface
+
+String name = inField.getText();
+display.setText("Hello "+name+"\n");
+
+The above code will greet the user, and we want the code invoked once the
+  user clicks the goButton. So we must put this in a Java method that the
+    goButton's listener knows how to call whenever the button is clicked.
+
+Java provides a way for us to define a pre-selected method called
+  actionPerformed(), a part of the ActionListener interface.
+
+
+In this case an interface is a special Java class that contains only methods
+  and constants. This interface cannot contain instance variables.
+
+The definition of the ActionListener interface:
+
+public abstract interface ActionListener extends EventListener {
+    public abstract void actionPerformed(ActionEvent e);
+}
+
+
+This looks similar to a class definition. but interface replaces class.
+  We are also declaring this interface as abstract.
+
+An abstract interface/class is one that contains one or more abstract methods.
+  An abstract method is one that consists entirely of its signature without
+    a method body.
+
+Note that the actionPerformed() method places a semicolon where its body is
+  supposed to be.
+
+PRINCIPLE: A Java interface is like a Java class, but it cannot
+             contain instance variables.
+
+PRINCIPLE: An abstract method is one that lacks an implementation,
+             it has no method body.
+
+
+Declaring a method abstract means that we are leaving its implementation up
+  to the class that implements it. This means the implementation can be tailored
+    to a particular context and the signature specifying what the method should
+      generally do.
+
+actionPerformed() should take an ActionEvent object as a parameter
+  and then perform some kind of action.
+
+
+In effect, any class that implements the actionPerformed() method
+  can serve as a listener for ActionEvent s.
+
+So to create a listener for our JButton, we just need to provide
+  an implementation of the actionPerformed() method.
+
+
+The action to take is when the goButton is clicked, greet the user by input.
+  We will set it up so that actionPerformed() is called whenever the goButton
+    is clicked.
+
+public void actionPerformed(ActionEvent e) {
+    String name = inField.getText();
+    display.setText("Hello "+name+"\n");
+}
+
+We placed the code we want executed when the button is clicked
+  inside of the actionPerformed() method, so now Java knows what gets
+    done once goButton is clicked.
+
+But for Java to know that it should call this method in the first place,
+  we must:
+    -> Place the actionPerformed() method in our GreeterGUI class
+    -> Tell Java that GreeterGUI will be the ActionListener for the goButton.
+
+A stripped down GreeterGUI:
+
+public class GreeterGUI extends Frame implements ActionListener {
+    private JButton goButton;
+    private JTextField inField;
+    private JTextArea display;
+
+    ...
+    // specifying the ActionListener
+    public GreeterGUI() {
+        ...
+	goButton = new JButton("Click here for a greeting.");
+	goButton.addActionListener(this);
+	...
+    }
+
+    ...
+    //placed the method
+    public void actionPerformed(ActionEvent e) {
+        String name = inField.getText();
+	display.setText("Hello "+name+"\n");
+    }
+
+    ...
+
+}
+
+
+First, we declare that GreeterGUI implements the ActionListener interface in
+  the class header. This means that the class must provide a definition of the
+    actionPerformed() method.
+
+GreeterGUI isa ActionListener, so SimpleGUI is a JFrame and an ActionListener.
+
+
+Second, we use the addActionListener() method to associate
+  the listener with the goButton:
+
+goButton.addActionListener(this);
+
+The this keyword is a reference to the object in which it is being used.
+  It is a meta reference, a reference to itself; it is like a person referring
+    to themselves by saying "I".
+
+When used here, the this keyword refers to this GreeterGUI.
+  We are setting things up in such a way that the GreeterGUI will
+    serve as the listener for action events on the goButton.
+
+PRINCIPLE: The this keyword always refers to the object in which it is used.
+             It is like saying "i" or "me".
+
+
+The complete GreeterGUI source code:
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class GreeterGUI extends JFrame implements ActionListener
+{ 
+  // Declare instance variables for the components
+  private JLabel prompt;
+  private JTextField inField;
+  private JTextArea display;
+  private JButton goButton;
+    
+  /* Constructor: set up GUI */
+  public GreeterGUI()
+  {
+    // Instantiate the GUI components
+    prompt = new JLabel("Please type your name here: ");
+    inField = new JTextField(10);   // 10 chars wide
+    display = new JTextArea(5, 20);// 5 rows x 20 columns
+    goButton = new JButton("Click here for a greeting!");
+    
+    // add the components
+    setLayout(new FlowLayout(FlowLayout.LEFT));  
+    add(prompt);
+    add(inField);
+    add(goButton);
+    add(display);
+  
+    // make go button clickable
+    goButton.addActionListener(this);
+    
+    // widthxheight of window
+    setSize(400,200);
+    // display the JFrame    
+    setVisible(true); 
+  } 
+
+  /* actionPerformed is called when the button is clicked */
+  public void actionPerformed(ActionEvent e)
+  { 
+    String name = inField.getText();
+    display.setText("Hello " + name + "\n");
+  } 
+}
+
+
+To use GreeterGUI we can create a test class for it called TestGreeterGUI,
+  or we can add a main() method to the GreeterGUI class itself:
+
+package chapter4;
+
+public class TestGreeterGUI {
+
+    public static void main(String[] args) {
+
+    // create a new GreeterGUI object and use it
+    new GreeterGUI();
+    
+    }
+    
+}
+
+
+JTextField can serve as both an input element and as a control element for
+  action events. In a JTextField an ActionEvent is generated whenever the user
+    presses the return key.
+
+We must designate inField as the ActionListener in order to use the return key.
+
+
+
++++++
+4.5 Case Study: OneRowNim
+
+We can come up with two different OneRowNim interfaces. A CLI and GUI version.
+
+We also want the user to be able to play against a computer opponent instead
+  of the program simulating an entire game.
+
+
+As with the other OOP programs we have written, it is effective design for us
+  to break our problem into two primary objects:
+    -> The Computational Object: OneRowNim
+    -> The UI Object: KeyboardReader or OneRowNimGUI
+
+Remember that one of our design principles required that we create a OneRowNim
+  class that can be used with any interface without being altered. So we can
+    use OneRowNim in a CLI or GUI and it be the same OneRowNim.
+
+
+We designed the OneRowNim class to maintain the game state
+  and enforce the game rules, making it the computational object.
+
+An instance of OneRowNim keeps track of whose turn it is, when the game
+  is over, and who the winner is. The program also enforces rules by throwing
+    an error if a player takes too many or too little sticks.
+
+OneRowNim at the end of Chapter3:
+
+-------------------------
+     OneRowNim           |
+-------------------------
+  -nSticks:int=21        |
+  -player:int=1          |
+-------------------------
+  +OneRowNim()           |
+  +OneRowNIm(sticks:int) |
+  +OneRowNim(st:int,pl:int)
+  +takeSticks(num:int)   |
+  +getSticks():int       |
+  +getPlayer():int       |
+  +gameOver():boolean    |
+  +getWinner():int       |
+  +report()              |
+-------------------------
+
+
+
+---
+OneRowNimCLI
+
+To create a OneRowNim CLI program, we need to connect a OneRowNim instance
+  with a KeyboardReader instance.
+
+We won't need to make changes to OneRowNim or KeyboardReader, but we will use
+  a third object to serve as the main program. OneRowNimCLI will use the
+    KeyboardReader object to prompt the user, display the programs output,
+      and perform input from the keyboard. The OneRowNim object will be used
+        by OneRowNimCLI to keep the game state.
+
+
+The primary challenge of this problem is designing the run() method.
+  We know that the players will repeatedly take turns, so a looping
+    construct is necessary. Since we want the first loop to evaluate
+      regardless of input, we will use a while.
+
+The condition that terminates the game is when there are no sticks left for the
+  players to pick up. Therefore, we can use the number of sticks left as the
+    loop entry condition.
+
+We will repeat the loop while there are more than 0 sticks remaining.
+  The pseudocode of out program:
+
+Instantiate a OneRowNim game object with 21 sticks
+  Instantiate a KeyboardReader reader object
+  sticksLeft = game:get the number of sticks left
+  reader:display the rules of the game
+  while(game:game over?)
+    whoseMove = game:find out whose turn
+    if(whoseMove==user)
+      game:user inputs number of sticks to take
+    else
+      game:computer inputs number of sticks to take
+    sticksLeft = game:get the number of sticks left
+    reader: report the number of sticks left
+  // game over past here
+  if game:user is the winner
+    reader:report that the user wins
+  else
+    reader:report that the computer wins
+
+
+We left out of the algorithm the details of the user's moves and computer's
+  moves. These actions are more useful as seperate methods, where we can worry
+    about move lagality and other technicalities.
+
+
+The implementation of OneRowNimCLI ises a KeyboardReader as a CLI interface
+  and a OneRowNim instance as its computational object. So we must make private
+    instance variables for each of these objects, which we instantiate in the
+      contructor method.
+
+The algorithm we described in pseudocode is implemented within the run() method
+  body, which is called from main() after the application is instantiated. The
+    use of the boolean method gameOver() to control the loop makes the segment
+      easier to understand and leaves it up to the game object to determine
+        when the game is over.
+
+The getWinner() method also is determined by the game object,
+  not the UI.
+
+
+public class OneRowNimApp
+{ private KeyboardReader reader;
+  private OneRowNim game;
+  public OneRowNimApp()
+  { reader = new KeyboardReader();
+    game = new OneRowNim(21);
+  } //OneRowNim()
+  public void run()
+  { int sticksLeft = game.getSticks();
+    reader.display("Let's play One Row Nim. You go first.\n");
+    reader.display("There are " + sticksLeft +
+                                       " sticks left.\n");
+    reader.display("You can pick up 1, 2, or 3 at a time\n.");
+    while (game.gameOver() == false)
+    { if (game.getPlayer() == 1)  userMove();
+      else computerMove();
+      sticksLeft = game.getSticks();
+      reader.display("There are " + sticksLeft +
+                                      " sticks left.\n");
+    } // while
+    if (game.getWinner() == 1)
+      reader.display("Game over. You win. Nice game.\n");
+    else  reader.display("Game over. I win. Nice game.\n");
+  } //run()
+  private void userMove()
+  { reader.prompt("Do you take 1, 2, or 3 sticks?: ");
+    int userTakes = reader.getKeyboardInteger();
+    if (game.takeSticks(userTakes))
+    { reader.display("You take " + userTakes + ".\n");
+    } else
+    { reader.display("You can't take " + userTakes +
+                                          ". Try again\n");
+    } // else
+  } //userMove()
+  private void computerMove()
+  { game.takeAway(1);  // Temporary strategy.
+    reader.display("I take 1 stick. ");
+  } //computerMove()
+  public static void main(String args[])
+  { OneRowNimApp app = new OneRowNimApp();
+    app.run();
+  } //main()
+} // OneRowNimApp
+
+
+run() calls userMove() and computerMove() to perform the specific set of
+  actions associated with each type of move. The userMove() method uses the
+    KeybaordReader() to prompt the user and input his or her move. It then
+      passes the user choice to game.takeSticks() in an if statement to
+        determine if the move was valid and responds accordingly.
+
+
+We use private methods to implement the actions associated with the user
+  and computer moves. These private methods are not a part of the interface
+    and can only be used within the objects themselves.
+
+These are called helper methods. The division of labor allows us to organize
+  all of the details associated with the moves into a single module.
+
+The CPU uses a temporary strategy of taking 1 stick and
+  reports itself to the UI.
+
+Note that we used KeyboardReader without change.
+
+EFFECTIVE DESIGN: Code reuse. Using KeyboardReader in this way
+                    is a good example of reusing code on different
+		      programs that need this functionality.
+
+
+
+---
+OneRowNimGUI
+
+We can follow the same desing pattern as GreeterGUI
+  so we must consider how we use components:
+    -> Input = JTextField
+    -> Output = JTextArea
+    -> Control components = JTextField JButton JLabel
+
+
+The GUI will need the proper import statements:
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+
+Add the requirement to the module-into file:
+
+module games {
+    requires java.desktop;
+}
+
+
+We must begin OneRowNimGUI with a reference to the computational
+  object:
+
+private OneRowNim game;
+...
+game = new OneRowNim();
+
+
+The biggest difference between the CLI and GUI versions lies in the
+  interaction with the user. actionPerformed() holds responsibility for
+    the interaction, and actionPerformed() actions depend on the actual
+      progreess of the individual game.
+
+
+We won't need to use a looping construct in actionPerformed().
+  We will rely on Java's event loop to change turns and progress
+    the game.
+
+
+As in GreeterGUI, actionPerformed() will be called automatically whenever
+  the JButton is clicked. The GUIs responsibity is to ensure that it is the
+    user's turn everytime this action occurs.
+
+We must design actionPerformed() so that each time it is called, it first
+  performs the users move and then the CPUs move if everything was input
+    correctly.
+
+Let the user move
+  If game:game is not over and CPU turn,
+    let the CPU move.
+  Game: how many sticks are left.
+  display: report how many sticks are left
+  If game:game is over
+    Stop accepting moves.
+    Report the winner.
+
+
+After the users move, it is possible that the user picked up the last stick,
+  which is a gameover. The user could have picked up the wrong amount of sticks.
+    In these situations, the CPU would not get a move. We must consider every
+      possibility when constructing our algorithm.
+
+The OneRowNim object's responsibility is to keep track of game state and turns.
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class OneRowNimGUI extends JFrame implements ActionListener
+{ private JTextArea display;
+  private JTextField inField;
+  private JButton goButton;
+  private OneRowNim game;
+  public OneRowNimGUI(String title)
+  { game = new OneRowNim(21);
+    buildGUI();
+    setTitle(title);
+    pack();
+    setVisible(true);
+  } // OneRowNimGUI()
+  private void buildGUI()
+  { Container contentPane = getContentPane();
+    contentPane.setLayout(new BorderLayout());
+    display = new JTextArea(20,30);
+    display.setText("Let's play Take Away. There are " + game.getSticks() +
+      " sticks.\n" + "Pick up 1,2, or 3 at a time.\n" + "You go first.\n");
+    inField = new JTextField(10);
+    goButton = new JButton("Take Sticks");
+    goButton.addActionListener(this);
+    JPanel inputPanel = new JPanel();
+    inputPanel.add(new JLabel("How many sticks do you take: "));
+    inputPanel.add(inField);
+    inputPanel.add(goButton);
+    contentPane.add("Center", display);
+    contentPane.add("South", inputPanel);
+  } // buildGUI
+  private void userMove()
+  { int userTakes = Integer.parseInt(inField.getText());
+    if (game.takeSticks(userTakes))
+      display.append("You take " + userTakes + ".\n");
+    else display.append("You can't take " + userTakes + ". Try again\n");
+  }// userMove()
+  private void computerMove()
+  { if (game.gameOver()) return;
+    if (game.getPlayer() == 2)
+    {   game.takeSticks(1); // Temporary strategy
+      display.append("I take one stick. ");
+    } // if
+  } // computerMove()
+  private void endGame()
+  { goButton.setEnabled(false);  // Disable button and textfield
+    inField.setEnabled(false);
+    if (game.getWinner() == 1)
+      display.append("Game over. You win. Nice game.\n");
+    else  display.append("Game over. I win. Nice game.\n");
+  } // endGame()
+  public void actionPerformed(ActionEvent e)
+  { if (e.getSource() == goButton)
+    { userMove();
+      computerMove();
+      int sticksLeft = game.getSticks();
+      display.append("There are " + sticksLeft + " sticks left.\n");
+      if (game.gameOver()) endGame();
+    } // if
+  } // actionPerformed()
+} // OneRowNimGUI
+
+
+OneRowNimGUI has instance variables for JTextField, JTextArea, JButton,
+  and one for a OneRowNim game (the computational object). It needs to be
+    able to refer to these objects throughout the class, so we declare them
+      with class scope.
+
+
+The constructor method creates an instance of the computational object,
+  builds the GUIs layout, the displays the interface on the console.
+
+
+All of the changes within buildGUI() are application specific.
+  A new method used is setText(). Unlike append(), which adds text
+    to already existing text in a text area, setText() replaces the text
+      in a JTextArea or a JTextField.
+
+
+userMove() and computerMove() encapsulate the details involved in performing
+  the player's moves. We are using event-driven programming design, so the user
+    input is taken from a JTextField rather than the keyboard. getText()
+      retrieves that input and we use Integer.parseInt() to convert to
+        a int value:
+
+int userTakes = Integer.parseInt(inField.getText());
+
+We use a JTextField to display the program messages to the user.
+
+
+In the actionPerformed() method, we use OneRowNim's public methods
+  to control user interaction:
+  -> getPlayer()
+  -> gameOver()
+  -> getWinner()
+
+
+The end of the game is handled by the built in Java event loop,
+  so the GUI will continue to respond to user events unless we say not to.
+    This is why we use setEnabled(false) on inField and goButton.
+
+setEnabled() can be used repeatedly in a GUI to turn components on/off.
+
+
+What we have applied:
+  By following the Java event driven programming model, we designate
+    one or more of our elements to serve as an ActionListener, and we
+      design algorithms to handle the action events that occur on that
+        element.
+
+
+
++++++
+java.io.File and File Input
+
+Files are the third type of standard interface along with CLI and GUI in Java.
+
+The Scanner class can not only read user input,
+  but we can use it to read files for us.
+
+Files can be useful for storing a collection of data that we can read and
+  extract information from, like a database of riddles that can be read and
+    displayed by a Java program.
+
+
+Java has two types of files, text and binary files.
+
+A text file stores a sequence of characters. Binary files store machine
+  translateable data.
+
+
+
+---
+File Input with the File and Scanner Classes
+
+An instance of the java.io.File class stores information that a Scanner
+  object needs to create an input stream that is connected to the sequence
+    of characters in a text file.
+
+
+File theFile = new File("riddles.txt");
+
+We can create a File instance and store information about the riddles.txt
+  file in the same directory as the Java code being executed. If no such file
+    exists, the File object stores information needed to create such a file,
+      but does not create it.
+
+If we wish to create a File object that describes a file in another directory,
+  we must call the File constructor with a String parameter that specifies the
+    file's complete path name.
+
+The exists() method of a File instance can be used to determine whether or not
+  an file has been found with the specified name.
+
+
+In order to read data from a file with a Scanner object we will need to use
+  methods that haven't been discussed.
+
+------------------------------
+    Scanner
+------------------------------
+  +create(InputStream:st):Scanner
+  +create(File:f):Scanner
+  +next():String
+  +nextInt():int
+  +nextDouble():double
+  +useDelimiter(String:pat):Scanner
+  +hasNext():boolean
+  +hasNextInt():boolean
+  +hasNextDouble():boolean
+------------------------------
+
+Note the Scanner constructor with a File object as a parameter.
+  Unlike other create() methods, this create() throws an exception
+    that must be handled.
+
+Creating a Scanner object that will be connected to an input stream
+  that can read from a file:
+
+try {
+    File theFile = new File("riddles.txt");
+    fileScan = new Scanner(theFile);
+    fileScan = fileScan.useDelimiter("\r\n");
+}
+catch (IOException e) {
+    e.printStackTrace();
+}
+
+
+useDelimiter() has been used to set the Scanner object so that spaces can occur
+  in Strings that are read by the Scanner. For the definition of a class to
+    read riddles from a file, we place the above code segment as the body
+      of a constructor method.
+
+After we create a Scanner object connected to a file, we can make a call
+  to nextInt(), nextDouble(), or next() to read the appropriate data types
+    from the file.
+
+We must test to see if there is more data in a file before reading it.
+  We can achieve this through the hasNext(), hasInt(), hasDouble() methods.
+    These methods return the value of true if there is more data in the file.
+
+import java.io.*;
+import java.util.Scanner;
+public class RiddleFileReader
+{  private Scanner fileScan; // For file input
+   private Scanner kbScan;   // For keyboard input
+   public RiddleFileReader(String fName)
+   {   kbScan = new Scanner(System.in);
+       try
+       {   File theFile = new File(fName);
+           fileScan = new Scanner(theFile);
+           fileScan = fileScan.useDelimiter("\r\n");
+       } catch (IOException e)
+       {    e.printStackTrace();
+       } //catch()
+   } //RiddleFileReader() constructor
+   public Riddle readRiddle()
+   {   String ques = null;
+       String ans = null;
+       Riddle theRiddle = null;
+       if (fileScan.hasNext())
+           ques = fileScan.next();
+       if (fileScan.hasNext())
+       {   ans =  fileScan.next();
+           theRiddle = new Riddle(ques, ans);
+       } // if
+       return theRiddle;
+   } // readRiddle()
+   public void displayRiddle(Riddle aRiddle)
+   {   System.out.println(aRiddle.getQuestion());
+       System.out.print("Input any letter to see answer:");
+       String str = kbScan .next();  //Ignore KB input
+       System.out.println(aRiddle.getAnswer());
+       System.out.println();
+   } // displayRiddle()
+   public static void main(String[] args)
+   {   RiddleFileReader rfr =
+           new RiddleFileReader("riddles.txt");
+       Riddle riddle = rfr.readRiddle();
+       while (riddle != null)
+       {   rfr.displayRiddle(riddle);
+           riddle = rfr.readRiddle();
+       } // while
+   } //main()
+}  //RiddleFileReader class
+
+
+Note that in readRiddles(), the statement below explicitly states that
+  variables referring to objects are assigned null as a value when declared.
+
+String ques = null;
+String ans = null;
+Riddle theRiddle = null;
+
+
+The conditional if's will read the String s into the variables ques and ans
+  only if the file contains lines of data for them, otherwise readRiddle() will
+    return a null value.
+
+The main() method uses this fact to terminate a while loop when it runs out
+  of String data to assign to Riddle q and a's.
+
+if(fileScan.hasNext())
+    ques = fileScan.next();
+if(fileScan.hasNext()) {
+    ans = fileScan.next();
+    theRiddle = mew Riddle(ques, ans);
+}
+
+A seperate method, displayRiddle() uses a separate instance of Scanner
+  attached to the kb to display the question of a Riddle before the answer.
+
+
+
+---
+Self-Study
+
+1) NumberFileReader. Modify the RiddleFileReader class to create a program
+     NumberFileReader that opens a file named numbers.txt and reports the sum
+       of the squares of the integers in the file. numbers.txt will contain a
+         list of integers, one on each line.
+
+   This program should print the sum of the squares in the System.out console
+     window.
+
+   There isn't a need for a display method, or having a Scanner object
+     connected to the keyboard. We will want a constructor method and a method
+       that reads the numbers and computes the sum of squares.
+
+
+
++++++
+Exercises
+
+1) The JButton, JTextField, and JComponent classes are defined in the
+     javax.swing.* package.
+
+
+
+2) Java GUIs utilize a form of control known as event-driven programming.
+
+
+
+3) When the user clicks on a programs JButton, an event will automatically
+     be generated.
+
+
+
+4) Two kinds of objects that generate ActionEvents are JButton and JTextField.
+     JButton, JTextField, and JComponent are all subclasses of javax.swing.*.
+
+
+
+5) JFrame is a subclass of javax.swing.*.
+
+
+
+6) If a Java class intends to handle ActionEvent, it must implement the
+  actionPerformed() interface.
+
+
+
+
+
+1) Explain the difference between an ActionEvent and an ActionListener.
+
+Action Events. These occur once the user has triggered an action, such as
+  clicking a button with the mouse, or pressing the enter key in a JTextField.
+
+ActionListener. Any object listening for an action event from the user.
+  We can listen to the return key or the mouse button for Action events.
+
+
+
+2) JButton. List the signatures of all its constructors.
+
+public JButton() {
+}
+
+public JButton(Icon icon) {
+}
+
+publuc JButton(String text) {
+}
+
+public JButton(Action a) {
+}
+
+public JButton(String text, Icon icon) {
+}
+
+
+
+3) What method should we use to set the text in our program's JTextField?
+
+inField.setText(text);
+
+
+
+4) Does the JButton have an init() method?
+
+No. We must initialize the button like:
+  private JButton goButton;
+  ...
+  private void builGUI() {
+      ...
+      goButton = new JButtton("Click me");
+      ...
+  }
+
+
+
+5) Does a JButton have an add() method?
+
+Yes, add() is inherited from java.awt.*
+
+
+
+6) We have a program with a JButton named "button". Walk through
+     Java's event handling model once the button is clicked.
+
+There should be an ActionListener attached to the button, once the
+  event is triggered by clicking the button, actionPerformed is initailized:
+
+public void actionPerformed(ActionEvent e) {
+	if(e.getSource()==goButton) {
+		userMove();
+		computerMove();
+		int sticksLeft = game.getSticks();
+		display.append("There are "+sticksLeft+" sticks left.\n");
+		if(game.gameOver())
+			endGame();
+	}
+}
+
+
+We can see in the method body of ActionPerformed that if the ActionEvent (e) is
+  equal to the goButton, then execute the following code. If the ActionEvent
+    doesn't equal the goButton listener then the gameOver() method is called.
+
+
+
+7) Design and implement a GUI that contains two JButtons, labeled "Me first"
+     and "Me next". Each time the user clicks either button, the labels on both
+       buttons should be exchanged. We don't need an if-else statement.
+
+We were able to do this, but the buttons only swap once.
+  It works for either button, but only once.
+
+We also used an if-else statement..
+
+
+
+8) Make a ThreeButtonGUI that does the same thing..
+
+chapter4.ThreeButtonGUI.
+
+It contains three separate if-else statements which is redundant,
+  but it seems to let me swap the buttons infinitely unlike
+    TwoButtonGUI.
+
+
+
+9) Design and implement a GUI that contains a JTextField and two
+     JButtons labeled "left" and "right". Each time the user clicks
+       one of the buttons, the button label should display in the
+         JTextField.
+
+Come back to this..
+
+
+
+10)
+
+
+
+11)
+
+
+
+12)
+
+
+

@@ -1,0 +1,1225 @@
+Chapter 3 Methods: Communicating with Objects
+
+
++++++
+3.2 Passing Information to an Object
+
+We use public methods to set and get values of private
+  attributes(instance variables).
+
+
+Getters
+Accessor methods get the value of an object's instance variable.
+
+public dataType getVarName() {
+    return varName;
+}
+
+
+Setters
+Mutator methods are publuc methods used to modify the value of
+  one or more instance variables.
+
+public void setVarName(dataType newValue) {
+    [this.]varName = newValue;
+}
+
+
+
+---
+Defining and Invoking a Method
+
+package scratch;
+
+public class TestObject {
+
+	// define a constructor so we can instantiate a test object
+	TestObject() {
+		
+	}
+	
+	/**
+	 * define a method that the TestObject can invoke.
+	 * 
+	 * this method printStr takes a String(str) and
+	 * prints it for us.
+	 * 
+	 * @param str
+	 */
+	public void printStr(String str) {
+		System.out.println(str);
+	}
+	
+	public static void main(String[] args) {
+		// instantiate a TestObject called obj
+		TestObject obj = new TestObject();
+		
+		// invoke the method with the obj TestObject
+		obj.printStr("I love Mister Baby and Krista.");
+
+	}
+
+}
+
+
+
+---
+Parameters
+
+public class OneRowNim {
+	// instance variables
+	private int nSticks = 7;
+	private int player = 1;
+	
+	
+	// methods here
+	public void takeOne() {
+		nSticks = nSticks - 1;
+		player = 3 - player;
+	}
+	
+	public void takeTwo() {
+		nSticks = nSticks - 2;
+		player = 3 - player;
+	}
+	
+	public void takeThree() {
+		nSticks = nSticks - 3;
+		player = 3 - player;
+	}
+	
+	public void report() {
+		System.out.println("Number of remaining sticks: " + nSticks);
+		System.out.println("Next turn by player " + player);
+	}
+	
+}
+
+
+We defined three mutator methods in OneRowNim:
+  takeOne(), takeTwo(), takeThree()
+
+These methods change the value of two instance variables:
+  nSticks and player.
+
+nSticks is changed by the relevant named values.
+
+player is changed by a constant.
+
+
+Instead of having three methods doing basically the same thing,
+  we should have one method that takes a given number of sticks
+    and changes the value by that number.
+
+	public void takeSticks(int num) {
+		nSticks = nSticks - num;
+		player = 3 - player;
+	}
+
+
+
+Using parameters with our methods allows us to create more abstract methods.
+
+
+	public void setGame(int sticks, int startingPlayer) {
+		nSticks = sticks;
+		player = startingPlayer;
+	}
+
+
+
+---
+Local vs Class Scope
+
+The scope of something refers to where the thing can be used within a program.
+
+	public void takeSticks(int num) {
+		nSticks = nSticks - num;    // num is local to the method, nSticks is a class variable
+		player = 3 - player;
+	}
+
+
+A parameters scope is limited to the body of the method in which it is declared.
+
+REMEMBER these two restrictions:
+
+  -> Instance variables cannnot be used in the body of a class static method,
+       unless an instance of the class is created there and the dot notations
+         of the qualified names must be used to refer to the variable/method.
+
+  -> One class level variable can be used in the expression that initializes
+       a second class level variable only if the first is declared before the
+         second.
+
+Essentially, within the OneRowNim class we can refer to the instance variables
+  and methods directly, but in the OneRowNimTester main() method, we must
+    instantiate a OneRowNim object(game) and then use dot notation to refer
+      to the instance variables and methods.
+
+
+
+---
+Arguments and Parameters
+
+Parameters are a part of the method's definition
+
+Arguments are the value that is passed to a method when it is invoked.
+
+
+
+---
+Passing an int value to a OneRowNim method
+
+public static void main(String[] args) {
+    OneRowNim game = new OneRowNim();
+    game.setGame(21, 1);
+}
+
+This method sets the game sticks at 21 and the first player as 1.
+
+
+
+---
+Passing keyboard input to takeSticks()
+
+	OneRowNim game3 = new OneRowNim(21, 1);
+	Scanner sc = new Scannner(System.in);
+	System.out.println("To make your move,");
+	System.out.print("input the number of sticks to take ");
+	System.out.println("(1, 2, or 3) and then hit enter: ");
+	int num = sc.nextInt();    // read the int from kb
+	game.takeSticks(num);    // then use the value we read
+	game.report();
+
+
+This prompts the user for a move, the user must enter an integer.
+  Once the integer is entered by the user, it passes the number entered
+    to takeSticks() and the the state of the game is reported.
+
+
+
+---
+Exercises
+
+1) A parameter variable has ----- scope.
+  -> local
+
+
+
+2) Match the words.
+
+argument = value passed to the method during the method call
+
+method invocation = calling or using a defined method
+
+formal parameter = variable in the method declaration,
+                     that stores a value while the method is running
+
+method declaration = defining a method specifying the name,
+                       parameters, result, and its associated
+		         segment of code.
+
+
+
+3) Extend the OneRowNim class, add player names as instannce variable,
+     define a way to set the names. For extra, add the player names to
+       be printed in report().
+
+	// add instance variables for player names
+	private String playerOne;
+	private String playerTwo;
+
+
+	// player name setter
+	public void setPlayerNames(String playerOne, String playerTwo) {
+		this.playerOne = playerOne;
+		this.playerTwo = playerTwo;
+	}
+	
+	public void report() {
+		System.out.println("Player 1: "+playerOne);
+		System.out.println("Player 2: "+playerTwo);
+		System.out.println("Number of remaining sticks: " + nSticks);
+		System.out.println("Next turn by player " + player);
+	}
+
+
+
++++++
+3.3 Constructors
+
+Instead of using setters to set initial value, we can use constructors
+  to set them.
+
+We already took the liberty to add some to OneRowNim:
+
+	// define the default constructor right away
+	OneRowNim() {
+		
+	}
+	
+	// constructor that lets us define a game
+	OneRowNim(int sticks, int startingPlayer) {
+		nSticks = sticks;
+		player = startingPlayer;
+	}
+	
+	// extended constructor that requires player names to be passed
+	OneRowNim(int sticks, int startingPlayer, String playerOne, String playerTwo) {
+		nSticks = sticks;
+		player = startingPlayer;
+		this.playerOne = playerOne;
+		this.playerTwo = playerTwo;
+	}
+
+
+A constructor is used to create an instance of an object/class and assign
+  initial values to the class's instance variables.
+
+A constructor looks like a method definition, but differs in two ways:
+  -> It must have the same name as the class.
+  -> Does not have a return type.
+
+Constructors are not inherited by a class's subclass.
+
+Constructors cannot return values, therefore its declaration cannot
+  include a return type. All method definitions except constructors
+    declare a return type.
+
+
+So do we keep setSticks(), setGame(), takeSticks() etc if we now have constructors
+  that do this for us?
+
+Yes (usually), having multiple ways to do one thing in our program is more flexible.
+
+However, in OneRowNim we want to use the takeSticks() method over the constructor,
+  this guaruntees that our instance variables only get changed within the rules
+    of the game.
+
+
+Default Constructors
+
+They look like this, but are provided by the class no declaration needed:
+
+public OneRowNim() {
+
+}
+
+
+Method Overloading
+
+In Java, this is when two methods have the same name.
+  What distinguishes one method from another is its signature,
+    which consists of the name, together with the number and types
+      of formal parameters that it takes.
+
+In OneRowNim we have created three constructors:
+  OneRowNime(), OneRowNim(int, int), OneRowNim(int, int, String, String)
+
+Each constructor contains a different signature.
+
+
+
++++++
+3.4 Retrieving Information from an Object
+
+We haven't created our access methods(getters) for OneRowNim yet.
+
+	public int getSticks() {
+		return nSticks;
+	}
+	
+	public int getPlayer() {
+		return player;
+	}
+
+	public String getPlayerOne() {
+		return playerOne;
+	}
+	
+	public String getPlayerTwo() {
+		return playerTwo;
+	}
+
+
+Getters look like:
+
+access returnType getInstanceVar() {
+    return instanceVar;
+}
+
+
+
+We can create methods that return computations as well:
+
+public boolean gameOver() {
+    return (nSticks <= 0);
+}
+
+True for game over, false for game still goin.
+
+
+
+---
+Invoking a Method That Returns a Value
+
+OneRowNim game = new OneRowNim(21);
+int sticksLeft = game.getSticks();
+
+
+Note: A nonvoid method call is an expression that has a value of a
+        particular type. After the method is execued, the method call
+	  expression becomes the value retured.
+
+
+
++++++
+3.5 Passing a Value and Passing a Reference
+
+The effect of passing arguments to a method differs depending on
+  whether we are passing the value of a primitive type or reference type value.
+  
+
+Primitive Types: Pass by Value
+
+When the argument of a primitive type is passed to a method, a copy
+  of the argument is passed to the formal parameter.
+
+
+
+Passing Reference Types
+
+When an argument of a reference type is passed to a method,
+  a copy of the reference to the object itself is assigned to the
+    parameter.
+
+
+
++++++
+3.6 Flow of Control: Control Structures
+
+
+---
+The Simple if Statement
+
+if(boolean statement)
+    doThis;
+
+The if statement is the most basic selection control structure.
+
+
+if(nSticks<=0)
+    System.out.println("Game Over");
+
+
+
+public class RainMonitor {
+    boolean isRaining = true;
+
+    if(isRaining) {
+        System.out.println("Bring an umbrella.");
+    } else {
+        System.out.println("Not raining currently.");
+    }
+
+
+
+---
+Relational Operators
+
+==, !=, <, >, <=, >=
+
+Rememeber: == for equality,
+           = for assignment.
+
+
+
+public String getPlayerString() {
+    if(player==1)
+	return playerOne;
+    if(player==2)
+	return playerTwo;
+    return "Player Error";
+}
+
+
+We must remember that when a return statement is executed in a method,
+  control is returned immediately to the calling method.
+
+If playe1==1 is true, then playerOne is returned to the calling method.
+If player==2 is true, then playerTwo is returned to the calling method.
+If those two are false, then the last statement is returned to the calling
+  method so that we can exit the control statement. It should never be reached.
+
+
+package conditionalExercises;
+
+public class RandomNumbers {
+
+    public static void main(String[] args) {
+        // get the random num
+        int num = (int) (Math.random() * 21) - 10;
+        System.out.println("Generated number: "+num);
+
+        // is num positive
+        if(num>0) {
+	    System.out.println("Number is positive.");
+        }
+
+        // is it zero
+        if(num==0) {
+	    System.out.println("The number is equal to zero.");
+        }
+		
+        // is it negative
+        if(num<0) {
+            System.out.println("The number is negative.");
+        }
+    }
+}
+
+
+
+---
+Compound Statements Inside if
+
+if(player==1) {
+    String str = "Player One";
+    System.out.println(str+" plays next.");
+    System.out.println("Keep playing.");
+}
+
+
+If the condition is met, all statements within the code block are evaluated.
+  Note that the local String variable str only has a scope within the block.
+
+
+
+---
+The if-else Statement
+
+if(booleanExpression)
+    statementOne;
+else
+    statementTwo;
+
+
+if(player==1)
+    System.out.println("Player One");
+else
+    System.out.println("Player Two");
+
+
+
+Multiway selection can be achieved through nested if-else statements.
+
+System.out.println("Nested if-else");
+Random rand = new Random();
+int randNum = rand.nextInt((3 - 0) + 1) + 0;
+if(randNum==1) {
+    System.out.println("Generated number equals "+randNum);
+} else if(randNum==2) {
+    System.out.println("Generated number equals "+randNum);
+} else if(randNum==3) {
+    System.out.println("Generated number equals "+randNum);
+} else {
+    System.out.println("Number is "+randNum);
+}
+
+
+// this works to
+int rndNum = (int) (Math.random() * 4);
+System.out.println("The number is "+rndNum);
+
+if(rndNum==0)
+    System.out.println("Zero");
+else if(rndNum==1)
+    System.out.println("One");
+else if(rndNum==2)
+    System.out.println("Two");
+else if(rndNum==3)
+    System.out.println("Three");
+else
+    System.out.println("Error: Unknown value");
+
+
+
+	public String getPlayerName() {
+		if(player==1)
+			return "Ann";
+		else if(player==2)
+			return "Bill";
+		else if(player==3)
+			return "Cal";
+		else
+			return "Error";
+	}
+
+
+
+---
+The while Structure
+
+while(conditional) {
+    doStuff;
+    Update;
+}
+
+
+A loop structure is a control structure that repeats a statement or sequence
+  of statements in a controlled way.
+
+package mathMethods;
+
+public class Sum {
+
+	public int sumSquares(int max) {
+		int num = 1;
+		int sum = 0;
+		
+		while(num<=max) {
+			sum = sum + num*num;
+			num = num + 1;
+		}
+		return sum;
+	}
+	
+	public static void main(String[] args) {
+		Sum s = new Sum();
+		int num = 10;
+		System.out.println("The sumSquares of "+num+" is "+s.sumSquares(num));
+	}
+}
+
+
+In order for the while loop to execute properly, the variable(s)
+  in the loop entry condition must be initialized correctly before the
+    while statement and these variables must be correctly updated at the
+      ennd of the body.
+
+
+A properly designed while structure must include an initializer, a loop
+  entry condition, and an updater. The update must allow for loop termination.
+
+
+The while loop is designed to handle 0 or more iterations because the
+  condition is tested before looping.
+
+
+HOLY FUCK THIS TOOK ME ALL DAY
+
+To find the sum of cubes of two given numbers:
+
+public int sumCubes(int min, int max) {
+    int num = min;
+    int sum = 0;
+		
+    while(num<=max) {
+        sum = sum + (num*num*num);
+        num += 1;
+    }
+    return sum;
+}
+
+
+
++++++
+3.7 Testing Extended OneRowNim
+
+
+---
+Using if-else Structures
+
+public boolean takeSticks(int num) {
+    if(num<1) {
+        return false;
+    } else if(num>3) {
+        return false;
+    } else {
+        nSticks = nSticks - num;
+	player = 3 - player;
+	return true;
+    }
+}
+
+
+We can see that if an invalid number is entered by the user,
+  false is returned and nothing is changed.
+
+When a valid number is input, the remaining sticks are calculated
+  and the player switches.
+
+
+
+Let's write a method that get the winner:
+
+public int getWinner() {
+    if(nSticks<1) {
+        return player;
+    } else {
+        return 0;
+    }
+}
+
+
+
+---
+Using a While Loop
+
+We want to accomplish this pseudocode in OneRowNim:
+
+Choose the initial number of sticks for the game.
+while the game is not over {
+    Report the state of the game
+    Process the next move
+}
+Report the state of the game
+Report who the winner is
+
+
+public static void main(String[] args) {
+    OneRowNim game = new OneRowNim();
+
+    while(game.gameOver==false) {
+        game.report();
+	int number = (int) (Math.random()*3) + 1;
+	System.out.println("Pickup random number of sticks: "+number);
+	if(game.takeSticks(number)==false)
+	    System.out.println("Error: can't take "+number+" sticks.");
+	System.out.println();
+    }
+    game.report();
+    System.out.println("Winner: "+game.getWinner());
+}
+
+
+
+We can write one with Scanner for user input:
+
+public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    OneRowNim game = new OneRowNim(21, 2, "Fargas", "Grumple");
+
+    while(game.gameOver()==false) {
+        game.report();
+        System.out.print("Input 1, 2, 3: ");
+	int sticks = sc.nextInt();
+	if(game.takeSticks()==false)
+	    System.out.println("Error: Cannot take "+sticks+" sticks!");
+	game.takeSticks(sticks);
+	System.out.println();
+    }
+    game.report();
+    System.out.println("Winner: "+game.getWinner());
+}
+
+
+
+---
+java.lang.Object Methods
+
+The superclass of all classes that occur in Java programs
+  is java.lang.Object.
+
+We are going to use an inherited method as well as override one.
+
+package games;
+
+public class Scratch {
+
+    public String toString();
+    
+    public static void main(String[] args) {
+
+        OneRowNim g1 = new OneRowNim();
+	OneRowNim g2 = new OneRowNim();
+
+        System.out.println(g1.toString());
+	System.out.println(g2.toString());
+    }
+}
+
+
+games.OneRowNim@52cc8049
+games.OneRowNim@5b6f7412
+
+
+The toString() method returns a String representation of its object.
+
+When used on instances of OneRowNim, we can see it returns the name of the
+  objects class concatenated with the memory address, which isn't useful.
+
+We can make toString() more useful to OneRowNim by overriding it,
+  OneRowNim.toString():
+
+public String toString() {
+    return "nSticks = "+nSticks+", player = "+player;
+}
+
+
+Testing it:
+
+  public static void main(String argv[])
+  { OneRowNim g1 = new OneRowNim(11);
+    OneRowNim g2 = new OneRowNim(13);
+    g1.takeSticks(2);
+    System.out.println(g1.toString());
+    System.out.println(g2.toString());
+  } //main
+
+
+Prints:
+
+nSticks = 9, player = 2
+nSticks = 13, player = 1
+
+
+We can leave out the toString() call within the System.out.println:
+
+System.out.println(g1);
+System.out.println(g2);
+
+
+Prints the same thing.
+
+
+
+---
+Inheritance and Polymorphism
+
+Leaving out toString() in the System.out.println is an example
+  of Java's inheritance mechanism.
+
+As a subclass of the superclass Object, OnneRowNim automatically inherits
+  toString() and any other public or protected methods defined in Object.
+
+
+We also used method overriding on toString() in OneRowNim.toString()
+  and Student.toString() to be useful to those classes.
+
+
+INHERITANCE
+The higher up in the class hierarchy that a method is defined, the more
+  widespread its use can be.
+
+OVERRIDING
+See toString(). We can override methods in any user defined Java class
+  making them useful to that specific class.
+
+POLYMORPHISM
+The concept that methods can behave differently when invoked
+  on different obbjects.
+
+
+Polymorphism is explained when we look at what toString() does differently
+  in java.obj.Student.toString() and java.obj.OneRowNim.toString().
+
+One method accomplishing two different tasks within two differing objects.
+
+
+
++++++
+IMPORTANT POINTS
+
+- A formal parameter is a variable in a method declaration. it always
+    consists of a type followed by a variable identifier. An argument
+      is a value passed to a method via formal parameter when the method
+        is invoked. A methods parameters constrain the type of information
+	  that can be passed to a method.
+
+- Primitive type arguments cannot be modified after being passed to the method.
+    Reference type arguments can.
+
+- Aside from void methods, method invocation is an expression which has a value
+    of a certain type. OneRowNim.getSticks() returns an int type value.
+
+- The signature of a method consists of its name, the number, types, and order
+    of its formal parameters. A class may not contain more than one method with
+      the same signature.
+
+- A constructor is a method that is invoked when an object is created.
+    If a class does not contain a constructor method, Java provides a
+      default constructor.
+
+- Information hiding is when restrict access to certain portions of a class.
+    An example is when we declare our instance variables as private.
+      Public methods make up the class interface.
+
+- The if statement executes a statement only if its boolean condition is true.
+    The if-else statement executes one or the other of its statements depending
+      on the value of its boolean condition. Multiway selection allows one and
+        only one of several choices to be selected depending on the value of its
+	  boolean condition.
+
+- The while statement is used for loop structures that repeatedly execute a
+    block of code while a boolean condition is satisfied.
+
+
+
++++++
+EXERCISES
+
+1) Match the word/definition pairs.
+
+constructor - a method that is invoked when an object is created
+
+method signature - a method's name, number, type, and order of parameters
+
+setter method (mutator) - a method used to change an objects instance variables
+
+getter method - a method used to provide access to an object's instance variables
+
+void - the return type for a method that returns no value
+
+
+
+2) Match the word/definition pairs.
+
+inheritance - Allows the use of a superclass method in a subclass
+
+overloading - giving the same name but different parameters to two or more methods
+
+overriding - redefining a superclass method in a subclass
+
+
+
+3) Match the word/definition pairs.
+
+class scope - a class's instance variables have this scope
+
+local scope - a method's parameters have this scope
+
+private - instance variables have this type of access
+
+public - the methods that make up an object's interface have this access type
+
+
+
+4) Match the word/definition pairs.
+
+boolean - expression that evaluates to either true or false
+
+selection statements - if statements and if-else statements
+
+
+
+5) Debug the program.
+
+public class Debug
+{
+  public static void main (String[] args)    // fix main() method parameters
+  {
+    boolean isWalking = true;    // add isWalking variable
+    if (isWalking == true)    // remove semi-colon
+       System.out.println("Walking");
+    else
+       System.out.println("Not walking");
+  }
+}
+
+
+
+6) Debug the program.
+
+public class Debug
+{
+  
+  public static void main (String[] args)    // fix main() method parameters
+  {
+    boolean isWalking = false;    // we need a variable
+    
+    if (isWalking==true)    // complete the boolean expression
+       System.out.println("Walking");    // close the statement
+    else
+        System.out.println("Not walking");
+  }
+}
+
+
+
++++++
+PROGRAMMING EXERCISES
+
+1) Explain the difference between the concepts:
+
+Parameter and an argument
+Parameters are variables used to define a value within a method's signature.
+Arguments are values passed to a method when the method is called.
+
+Method definition and method invocation
+Method definition is its signature: name, parameters, return type and value,
+  checked exceptions the method may throw, method modifiers
+Method invocation is calling a method wiith zero or more arguments and running it.
+
+Local Scope and Class Scope
+Local scope has scope within the method it is defined.
+Class scope emcompasses all within the class including the methods.
+
+Primitive Type and Reference Type
+Primitves are data types that are built into the language and refer directly
+  to their values
+Reference data types are created by the programmer and point to the values
+  location in memory.
+
+Access Method and Constructor Method
+Accessor methods access a class's private instance variables
+Constructors are templates to create new objects from.
+
+
+
+2) Translate each of the following into Java code:
+
+If b1 is true, then print “one”; otherwise, print “two”.
+
+boolean b1 = false;
+boolean b2 = true;
+
+if(b1==true)
+    System.out.println("one");
+else
+    System.out.println("two");
+
+
+If b1 is false and if b2 is true, then print “one”; otherwise, print “two”.
+
+if(b1==false && b2==true)
+    System.out.println("one");
+else
+    System.out.println("two");
+
+
+If b1 is false then if b2 is true, then print “one”; otherwise, print “two”,
+  otherwise print “three”.
+
+if(b1==false && b2==true)
+    System.out.println("one");
+else
+    System.out.println("two");
+    System.out.println("three");
+
+
+
+3) Determine what is returned:
+
+if (isWalking == false)
+     System.out.println("One");
+     System.out.println("Two");
+
+> two
+
+
+if (isWalking == true)
+     System.out.println("One");
+     System.out.println("Two");
+
+> two
+
+
+if (isWalking == false)
+{
+     System.out.println("One");
+     System.out.println("Two");
+}
+
+> Null
+
+
+if (isWalking == false)
+     if (isTalking == true)
+         System.out.println("One");
+     else
+         System.out.println("Two");
+else
+     System.out.println("Three");
+
+> Three
+
+
+
+6) Write a boolean method—a method that returns a boolean—
+     that takes an int parameter and converts the integers 0 and 1
+       into false and true, respectively.
+
+public boolean bitToBoolean(int x) {
+    if(x==1)
+        return true;
+    return false;
+}
+
+
+
+7) Define an int method that takes a boolean parameter.
+     If the parameter's value is false, the method should return 0;
+       otherwise, it should return 1.
+
+public int booleanToBit(boolean myBool) {
+    if(myBool==false)
+        return 0;
+    return 1;
+}
+
+
+
+8) Define a void method named hello that takes a single boolean parameter.
+     The method should print “Hello” if its parameter is true;
+       otherwise, it should print “Goodbye”.
+
+public void hello(boolean myBool) {
+    if(myBool==true)
+        System.out.println("Hello");
+    System.out.println("Goodbye");
+}
+
+
+
+9) Define a method named hello that takes a single boolean parameter.
+     The method should return “Hello” if its parameter is true;
+       otherwise it should return “Goodbye”.
+         Note the difference between this method and the one in the previous exercise.
+	   This one returns a String. That one was a void method.
+
+public String hello(boolean bool) {
+    if(bool==true)
+        return "Hello";
+    return "Goodbye";
+
+
+
+10) Write a method named hello that takes a single String parameter.
+      The method should return a String that consists of the word “Hello” concatenated
+        with the value of its parameter. For example, if you call this method with the
+	  expression hello("dolly"), it should return “hello dolly”.
+	    If you call it with hello("young lovers wherever you are"),
+	      it should return “hello young lovers wherever you are”.
+
+public String hello(String str) {
+    return "Hello "+str+"!";
+}
+
+
+
+11) Define a void method named day1 that prints “a partridge in a pear tree”.
+
+public void firstDay() {
+    System.out.println("a partridge in a pear tree.");
+}
+
+
+12) Write a Java application program called TwelveDays that prints the
+      Christmas carol “Twelve Days of Christmas.” For this version, write a
+        void method named intro() that takes a single String parameter that
+	  gives the day of the verse and prints the intro to the song. For
+	    example, intro("first") should print, “On the first day of
+	      Christmas my true love gave to me”. Then write methods day1(),
+	        day2(), and so on, each of which prints its version of the verse.
+		  Then write a main() method that calls the other methods to print
+		    the whole song.
+
+package chapter3;
+
+public class TwelveDays {
+	
+	public static void intro(String str) {
+		if(str=="first") {
+			System.out.print("On the first day of Christmas my"
+					+ " true love gave to me ");
+		} else if(str=="second") {
+			System.out.print("On the second day of Christams my"
+					+ " true love gave to me ");
+		} else if(str=="third") {
+			System.out.print("On the third day of Christmas my"
+					+ " true love gave to me ");
+		} else {
+			System.out.print("Error: There are only three days"
+					+ " in this version!");
+		}
+	}
+	
+	
+	
+	public static void day1() {
+		System.out.println("a partridge in a pear tree.");
+	}
+	
+	public static void day2() {
+		System.out.println("two turtle doves,"
+				+ " and a partridge in a pear tree.");
+	}
+	
+	public static void day3() {
+		System.out.println("three french hens,"
+				+ " two turtle doves"
+				+ " and a partridge in a pear tree.");
+	}
+	
+	public static void main(String[] args) {
+		intro("first");
+		day1();
+		intro("second");
+		day2();
+		intro("third");
+		day3();
+		intro("fourth");
+
+	}
+
+}
+
+
+
+13) Define a void method named verse that takes two String parameters
+      and returns a verse of the Christmas Carol "Twelve Days of Christmas".
+
+public static void verse(String intro, String str) {
+    if(intro=="second" || intro=="third") {
+        intro(intro);
+	System.out.print(str);
+	System.out.println(" and a partridge in a pear tree!");
+    } else if(intro=="first") {
+        intro(intro);
+	System.out.println(str);
+    } else {
+        System.out.println("Error: Not a valid day/verse combo..");
+    }
+}
+
+
+
+14) Define a void method named permute, that takes three String parameters and
+      prints out all possible arrangements of the three Strings.
+
+public static void permute(String a, String b, String c) {
+		
+	if(a.length()==0 || b.length()==0 || c.length()==0) {
+		return;
+	} else {
+		System.out.println(a+b+c);
+		System.out.println(a+c+b);
+		System.out.println(b+a+c);
+		System.out.println(b+c+a);
+		System.out.println(c+b+a);
+		System.out.println(c+a+b);
+	}
+}
+
+
+
+16) Define a class named Donor with two instance variables, name and rating
+      as String type. The name can be any String, but the rating must be either
+        "none" "high" or "medium". Write the constructor for setting the
+	  name and rating, the getters, and the setters.
+
+See the Doner class under the chapter3 package.
+
+
+
+17) Define a CopyMonitor class with two important boolean variables,
+      whether toner level is low/none or whether it has printed more than
+        100,000 pages since last service. Service is necessary when either or
+	  both of these conditions are met. Create a method that reports whether
+	    service is needed or not based on the machine state.
+
+java.Object.chapter3.CopyMonitor
+
+
+

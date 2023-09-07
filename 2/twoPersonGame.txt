@@ -1,0 +1,378 @@
+2.5 CASE STUDY - Simulating a Two-Person Game
+
+The game we will consider is played by two persons with a row of sticks or coins or other objects.
+The players alternate turns. On each turn, the player must remove one, two, or three sticks from the row.
+Whoever removes the last stick loses.
+
+The game can be played with any number of sticks but starting with twenty one sticks is quite common.
+
+
+Specification: Design a class named OneRowNim that simulates a game of one row Nim.
+                 A OneRowNim object should keep track of whose turn it is and allow
+		   players to take one, two, or three sticks. It should sbe able to
+		     determine whether the game is over.
+
+
+
+++++++++++++++++++++
+PROBLEM DECOMPOSITION
+
+We can design OneRowNim so that it can be used with
+  different kinds of user interface:
+    -> P v P
+    -> P v C
+    -> KB and console interface
+    -> Graphical interface
+
+
+
+++++++++++++++++++++
+CLASS DESIGN
+
+We break our class definitions into two parts:
+  -> Instance variables, the information or attributes the object requires.
+  -> Instance methods, the behaviours an object has; actions it can take.
+
+Two pieces of information that vary as the game is played are
+  the number of sticks remaining and which player has the next turn:
+
+Variable Name    Type    Values
+nSticks          int     0-21
+player           int     1 or 2
+
+During gameplay, these instance variable values will represent
+  the state of the game: number of sticks remaining and whose turn it is.
+
+
+
+++++++++++++++++++++
+METHOD DECOMPOSITION
+
+One action we know of in the game is taking away 1-3 sticks.
+
+So we can make three methods that correspond with the number of sticks taken:
+  takeOne()
+  takeTwo()
+  takeThree()
+
+Each method will be responsible for reducing the value of nSticks,
+  as well as switching to the other player.
+
+We need another method that reports the state of the game:
+  report()
+
+
+-------------------
+|  OneRowNim       |
+-------------------|
+|  -nSticks:int=7  |
+|  -player:int=1   |
+-------------------|
+|  +takeOne()      |
+|  +takeTwo()      |
+|  +takeThree()    |
+|  +report()       |
+-------------------
+
+
+
+++++++++++++++++++++
+INSTANCE VARIABLES
+
+Note: We typically declare our instance variables as private and use getter
+        methods to retrieve the stored data. This protects the data from other
+	  objects.
+
+The body of a class definition consists of two parts: variables and methods.
+
+An instance variable is a variable that can be used throughout the class,
+  this makes it a class-level variable.
+
+We define our instance level variables first, then our methods:
+
+public class OneRowNim {
+    // instance variables
+    private String var1;
+    private int var2;
+    private double var3;
+
+    // instance methods
+    getThis() {
+        // this that
+    }
+    getThat() {
+        //this that
+    }
+
+    setThis() {
+        // this that
+    }
+    setThat() {
+        // this that
+    }
+
+    machineState() {
+        // state
+    }
+}
+
+
+Intance variables are distinguished from local variables,
+  because local variables are defined within a method.
+
+We typically declare our instance variables as private to protect them
+  from other objects.
+
+
+Java provides three different access modifiers:
+  -> private      element cannot be accessed outside of the class in
+                    which it was declared
+  -> public       element accessible to any other object
+  -> protected    element is only accessible within subclasses of its class and
+                    by other classes that belong to the same package
+
+
+
+++++++++++++++++++++
+2.5.2.3 OneRowNim's Methods
+
+
+----------
+The Method Header
+
+Designing and defining methods is a form of abstraction.
+
+By defining a method, we are encapsulating an action or group
+  of actions under one name. That name can be used to call or
+    invoke this action.
+
+Methods come in two parts, the method header and the method body.
+
+The method header goes like:
+methodModifiers     resultType     methodName     formalParameterList
+public static       void           main           (String[] args)
+public              void           paint          (Graphics g)
+public                             Riddle         (String q, String a)
+public              String         getQuestion    ()
+public              String         getAnswer      ()
+
+
+Note: Private methods are usually called utility or helper methods.
+
+
+	public void takeOne() {
+		
+	}
+	public void takeTwo() {
+		
+	}
+	public void takeThree() {
+		
+	}
+	public void report() {
+		
+	}
+
+
+The four methods in OneRowNim should be public so that they may interface
+  with other objects.
+
+The methods will receive no data and return no value, thus their return
+  types shall be declared void.
+
+
+
+----------
+The Method Body
+
+This is the block of code where we define the methods actions.
+
+	public void takeOne() {
+		nSticks = nSticks - 1;
+		player = 3 - player;
+	}
+
+The method body of takeOne says that the value of nSticks is decremented by one
+  and switches the player to player2 or player1 depending on the current move.
+
+
+public class OneRowNim
+{ private int nSticks = 7; // Start with 7 sticks.
+  private int player = 1;  //Player 1 plays first.
+
+  public void takeOne()
+  { nSticks = nSticks - 1;
+    player = 3 - player;
+  } // takeOne()
+
+  public void takeTwo()
+  { nSticks = nSticks - 2;
+    player = 3 - player;
+  } // takeTwo()
+
+  public void takeThree()
+  { nSticks = nSticks - 3;
+    player = 3 - player;
+  }  // takeThree()
+
+  public void report()
+  { System.out.println("Number of sticks left: " + nSticks);
+    System.out.println("Next turn by player " + player);
+  }   // report()
+} // OneRowNim class
+
+
+For each taking action, we simply negate the number from the
+  value described in the method name.
+
+report() must consist of the number of sticks left and who the next turn is.
+
+
+
+++++++++++++++++++++
+Testing the OneRowNim Class
+
+We test the class by defining a main() method.
+
+Following best practice, we will separate the main() method into a
+  user-interface class called OneRowNimTester.
+
+The pseudocode:
+
+Declare a variable of type OneRowNim named game.
+Instantiate a OneRowNim object to which game refers.
+Tell game to report.
+Tell game to remove three sticks.
+Tell game to report.
+Tell game to remove three sticks.
+Tell game to report.
+Tell game to remove one stick.
+Tell game to report.
+
+
+The actual code:
+
+public class OneRowNimTester (
+
+    public static void main(String[] args) {
+        OneRowNim game = new OneRowNim();
+
+        game.report();
+	game.takeThree();
+	game.report();
+	game.takeThree();
+	game.report();
+	game.takeOne();
+	game.report();
+    }
+
+}
+
+
+
+++++++++++++++++++++
+Flow of Control: Method Call and Return
+
+Flow of control is the order in which a program's statements are executed.
+
+In an object-oriented program, control passes from one object
+  to another during execution.
+
+---------------
+  method1()    |
+---------------|     ----------------
+     ..        |    |   method2()   |
+     ..        |    |---------------|
+  method2(); ---------> statement1; |
+       ^---------   |      ...      |
+  method3()    | |  |      ...      |
+	       |  -----  return;    |
+---------------	     ----------------
+
+
+The method call and return mechanism.
+
+A method call causes a program to transfer control to a statement
+  located in another method.
+
+method1() goes through statements one by one until it reaches method2().
+  This transfers control to the first statement in method2().
+    method2() goes through statements one-at-a-time until
+      the execution of the return statement.
+
+The return statement transfers control back to method1().
+
+If a void method does not contain a return statement, then control
+  will automatically return to the calling statement after the invoked
+    method executes its last statement.
+
+
+
+----------
+Tracing the OneRowNim Program
+
+public class OneRowNim
+2 {  private int nSticks = 7; // Start with 7 sticks.
+3    private int player = 1;  //Player 1 plays first.
+      public void takeOne()
+20    {  nSticks = nSticks - 1;
+21       player = 3 - player;
+      } // takeOne()
+      public void takeTwo()
+      {  nSticks = nSticks - 2;
+         player = 3 - player;
+      } // takeTwo()
+      public void takeThree()
+8,14  {  nSticks = nSticks - 3;
+9,15     player = 3 - player;
+      }  // takeThree()
+      public void report()
+5,11,17,23 { System.out.println("Number of sticks left: " + nSticks);
+6,12,18,24   System.out.println("Next turn by player " + player);
+      }   // report()
+      public static void main(String args[])
+1     {  OneRowNim game = new OneRowNim();
+4        game.report();
+7        game.takeThree();
+10       game.report();
+13       game.takeThree();
+16       game.report();
+19       game.takeOne();
+22       game.report();
+23     } //main()
+   } //OneRowNim class
+
+
+Execution begins at the first statement in the main() method.
+  The statement declares a OneRowNim object named game which calls
+    the OneRowNim() constructor, initializing a new object.
+
+Calling the constructor causes the control to shift to the instance variables
+  within the class and initial values are assigned to them.
+
+Control then shifts back to the second statement in main().
+
+As it stands, game refers to an instance of the OneRowNim class.
+  Executing statement 4 causes control to shift to report()
+    where statement 5 and 6 are.
+
+Tracing the rest of the program follows the same way..
+
+
+
+++++++++++++++++++++
+Object-Oriented Design: Basic Principles
+
+Encapsulation
+OneRowNim encapsulates a certain state and a certain set of actions.
+  Its methods were designed to encapsulate the actions that make up
+    their particular class.
+
+Information Hiding
+OneRowNim's instance variables are declared private and can only be
+  changed through the class's public methods.
+
+Clearly Designed Interface
+OneRowNim's interface is defined in terms with its public methods
+  which regulate the way users can interact with OneRowNim objects.
+

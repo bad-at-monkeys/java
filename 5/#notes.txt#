@@ -1,0 +1,127 @@
+Chapter 5 - Java Data and Operators
+
+Programming can be classified as a two part process
+  through representation and action.
+
+
+Representation means finding a way to look at the problem.
+  We must choose the correct data types and structures for our
+    programs.
+
+Action is the process of taking well-defined steps to solve a
+  problem. If we represent the problem correctly, we can take correct
+    actions.
+
+
+Can a chess board, with its top-left and bottom-right squares removed,
+  be completely tiled by dominoes that cover two squares at a time?
+
+One way to solve this problem might be to represent the chess board
+  and dominoes as they are graphically and manually input all possible
+    combinations.
+
+Another way to represent the problem comes from seeing that the top-left
+  and bottom-right sqaures are both white. If we remove those squares, we
+    have a board of 62 sqares, 32 black 30 white. Each domino must cover one
+      white and one black square, so an unequal number of tiles would make
+        the problem impossible.
+
+Thus by representing the problem as the total number of black and white
+  squares, the actions required to solve it involve very simple reasoning.
+    Just divide the total number of squares by 2..
+
+
+
++++++
+Boolean Data and Operators
+
+Boolean expressions are also called conditions.
+  We can use boolean variables to hold the state of a condition.
+
+
+
+---
+Boolean (Logical) Operations
+
+AND &&    OR ||    EXCLUSIVE-OR ^    NOT !
+
+
+We define boolean operations with a truth table. Truth tables provide
+  all possible boolean values for the specified operands.
+
+Binary operators require two operands, AND OR and XOR are binary operators.
+  Unary operators require one operand, NOT(!) is a unary operator.
+
+!(3<5) = false
+
+
+
+---
+Precedence and Associativity
+
+true || true && false      =>    true  <----
+                                            |
+(true || true) && false    =>    false      |-- Same
+                                            |
+true || (true && false)    =>    true  <----
+
+
+The parenthesis is how we represent associativity in logical operations.
+  We can see the different return values just by moving parenthesis around
+    the expression.
+
+In Java AND&& has a higher precedence than OR||.
+
+The boolean operators have a built in precedence order which is used
+  to determine how boolean expressions are to be evaluated.
+
+
+PRECEDENCE   OPERATOR    OPERATION
+1            ( )         Parenthesis
+2            !           NOT
+3            ^           XOR
+4            &&          AND
+5            ||          OR
+
+
+Let's break another down:
+
+true || !false ^ false && true
+|
+--> true || (((!false) ^ false) && true)
+    |
+    --> true || ((true ^ false) && true)
+        |
+	--> true || (true && true)
+	    |
+	    --> true || true
+	        |
+		--> true
+
+PROGRAMMING TIP. Use parenthesis.
+
+
+In addition to operator precedence, we must also know an operator's
+  associativity.
+
+Which is evaluated first?
+(op1 || op2 || op3)
+|
+--> ((op1 || op2) || op3)
+
+Binary boolean operators associate from left to right.
+
+true ^ true ^ true      Same as: (true ^ true) ^ true
+true && true && true    Same as: (true && true) && true
+true || true || true    Same as: (true || true) || true
+
+
+(true ^ true)  ^ true      ==>     false ^ true      ==> true
+(true && true)  && true    ==>     true  && true     ==> true
+(true || true)  || true    ==>     true  || true     ==> true
+
+
+
+---
+Short-Circuit Evaluation
+

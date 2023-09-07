@@ -1,0 +1,51 @@
+javajavajava - notes
+
+We are starting these notes a little late at 2.4 Class Definition
+https://runestone.academy/ns/books/published/javajavajava/sec-classdef.html
+
+
+
+++++++++++
+2.4 Class Definition
+
+To design an object we need to answer five basic questions:
+  -> What role will the object perform in the program?
+  -> What data or information will it need?
+  -> What actions will it take?
+  -> What interface will it present to other objects?
+  -> What information will it hide from other objects?
+
+Refer to the Riddle class in riddleProgram.
+
+
+
+-----
+2.4.4 EFFECTIVE DESIGN: Public Methods
+
+The public methods and variales make up an objects interface.
+  Public methods can be used and accessed by other objects.
+
+
+
+-----
+2.4.2 The RiddleUser Class
+
+We seperate the main() method and the Riddle class
+  to get into the habit of placing a distinction between
+    the user interface(RiddleUser) and computational object(Riddle).
+
+
+
+-----
+2.4.5 Define, Create, Use
+
+Writing a Java program is a matter of three basic steps:
+  -> Class Definition
+       Define one or more classes.
+  -> Object Instantiation
+       Create objects and instances of the classes.
+  -> Object Use
+       Use the objects to do tasks.
+
+
+

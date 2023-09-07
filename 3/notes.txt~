@@ -1,0 +1,679 @@
+Chapter 3 Methods: Communicating with Objects
+
+
++++++
+3.2 Passing Information to an Object
+
+We use public methods to set and get values of private
+  attributes(instance variables).
+
+
+Getters
+Accessor methods get the value of an object's instance variable.
+
+public dataType getVarName() {
+    return varName;
+}
+
+
+Setters
+Mutator methods are publuc methods used to modify the value of
+  one or more instance variables.
+
+public void setVarName(dataType newValue) {
+    [this.]varName = newValue;
+}
+
+
+
+---
+Defining and Invoking a Method
+
+package scratch;
+
+public class TestObject {
+
+	// define a constructor so we can instantiate a test object
+	TestObject() {
+		
+	}
+	
+	/**
+	 * define a method that the TestObject can invoke.
+	 * 
+	 * this method printStr takes a String(str) and
+	 * prints it for us.
+	 * 
+	 * @param str
+	 */
+	public void printStr(String str) {
+		System.out.println(str);
+	}
+	
+	public static void main(String[] args) {
+		// instantiate a TestObject called obj
+		TestObject obj = new TestObject();
+		
+		// invoke the method with the obj TestObject
+		obj.printStr("I love Mister Baby and Krista.");
+
+	}
+
+}
+
+
+
+---
+Parameters
+
+public class OneRowNim {
+	// instance variables
+	private int nSticks = 7;
+	private int player = 1;
+	
+	
+	// methods here
+	public void takeOne() {
+		nSticks = nSticks - 1;
+		player = 3 - player;
+	}
+	
+	public void takeTwo() {
+		nSticks = nSticks - 2;
+		player = 3 - player;
+	}
+	
+	public void takeThree() {
+		nSticks = nSticks - 3;
+		player = 3 - player;
+	}
+	
+	public void report() {
+		System.out.println("Number of remaining sticks: " + nSticks);
+		System.out.println("Next turn by player " + player);
+	}
+	
+}
+
+
+We defined three mutator methods in OneRowNim:
+  takeOne(), takeTwo(), takeThree()
+
+These methods change the value of two instance variables:
+  nSticks and player.
+
+nSticks is changed by the relevant named values.
+
+player is changed by a constant.
+
+
+Instead of having three methods doing basically the same thing,
+  we should have one method that takes a given number of sticks
+    and changes the value by that number.
+
+	public void takeSticks(int num) {
+		nSticks = nSticks - num;
+		player = 3 - player;
+	}
+
+
+
+Using parameters with our methods allows us to create more abstract methods.
+
+
+	public void setGame(int sticks, int startingPlayer) {
+		nSticks = sticks;
+		player = startingPlayer;
+	}
+
+
+
+---
+Local vs Class Scope
+
+The scope of something refers to where the thing can be used within a program.
+
+	public void takeSticks(int num) {
+		nSticks = nSticks - num;    // num is local to the method, nSticks is a class variable
+		player = 3 - player;
+	}
+
+
+A parameters scope is limited to the body of the method in which it is declared.
+
+REMEMBER these two restrictions:
+
+  -> Instance variables cannnot be used in the body of a class static method,
+       unless an instance of the class is created there and the dot notations
+         of the qualified names must be used to refer to the variable/method.
+
+  -> One class level variable can be used in the expression that initializes
+       a second class level variable only if the first is declared before the
+         second.
+
+Essentially, within the OneRowNim class we can refer to the instance variables
+  and methods directly, but in the OneRowNimTester main() method, we must
+    instantiate a OneRowNim object(game) and then use dot notation to refer
+      to the instance variables and methods.
+
+
+
+---
+Arguments and Parameters
+
+Parameters are a part of the method's definition
+
+Arguments are the value that is passed to a method when it is invoked.
+
+
+
+---
+Passing an int value to a OneRowNim method
+
+public static void main(String[] args) {
+    OneRowNim game = new OneRowNim();
+    game.setGame(21, 1);
+}
+
+This method sets the game sticks at 21 and the first player as 1.
+
+
+
+---
+Passing keyboard input to takeSticks()
+
+	OneRowNim game3 = new OneRowNim(21, 1);
+	Scanner sc = new Scannner(System.in);
+	System.out.println("To make your move,");
+	System.out.print("input the number of sticks to take ");
+	System.out.println("(1, 2, or 3) and then hit enter: ");
+	int num = sc.nextInt();    // read the int from kb
+	game.takeSticks(num);    // then use the value we read
+	game.report();
+
+
+This prompts the user for a move, the user must enter an integer.
+  Once the integer is entered by the user, it passes the number entered
+    to takeSticks() and the the state of the game is reported.
+
+
+
+---
+Exercises
+
+1) A parameter variable has ----- scope.
+  -> local
+
+
+
+2) Match the words.
+
+argument = value passed to the method during the method call
+
+method invocation = calling or using a defined method
+
+formal parameter = variable in the method declaration,
+                     that stores a value while the method is running
+
+method declaration = defining a method specifying the name,
+                       parameters, result, and its associated
+		         segment of code.
+
+
+
+3) Extend the OneRowNim class, add player names as instannce variable,
+     define a way to set the names. For extra, add the player names to
+       be printed in report().
+
+	// add instance variables for player names
+	private String playerOne;
+	private String playerTwo;
+
+
+	// player name setter
+	public void setPlayerNames(String playerOne, String playerTwo) {
+		this.playerOne = playerOne;
+		this.playerTwo = playerTwo;
+	}
+	
+	public void report() {
+		System.out.println("Player 1: "+playerOne);
+		System.out.println("Player 2: "+playerTwo);
+		System.out.println("Number of remaining sticks: " + nSticks);
+		System.out.println("Next turn by player " + player);
+	}
+
+
+
++++++
+3.3 Constructors
+
+Instead of using setters to set initial value, we can use constructors
+  to set them.
+
+We already took the liberty to add some to OneRowNim:
+
+	// define the default constructor right away
+	OneRowNim() {
+		
+	}
+	
+	// constructor that lets us define a game
+	OneRowNim(int sticks, int startingPlayer) {
+		nSticks = sticks;
+		player = startingPlayer;
+	}
+	
+	// extended constructor that requires player names to be passed
+	OneRowNim(int sticks, int startingPlayer, String playerOne, String playerTwo) {
+		nSticks = sticks;
+		player = startingPlayer;
+		this.playerOne = playerOne;
+		this.playerTwo = playerTwo;
+	}
+
+
+A constructor is used to create an instance of an object/class and assign
+  initial values to the class's instance variables.
+
+A constructor looks like a method definition, but differs in two ways:
+  -> It must have the same name as the class.
+  -> Does not have a return type.
+
+Constructors are not inherited by a class's subclass.
+
+Constructors cannot return values, therefore its declaration cannot
+  include a return type. All method definitions except constructors
+    declare a return type.
+
+
+So do we keep setSticks(), setGame(), takeSticks() etc if we now have constructors
+  that do this for us?
+
+Yes (usually), having multiple ways to do one thing in our program is more flexible.
+
+However, in OneRowNim we want to use the takeSticks() method over the constructor,
+  this guaruntees that our instance variables only get changed within the rules
+    of the game.
+
+
+Default Constructors
+
+They look like this, but are provided by the class no declaration needed:
+
+public OneRowNim() {
+
+}
+
+
+Method Overloading
+
+In Java, this is when two methods have the same name.
+  What distinguishes one method from another is its signature,
+    which consists of the name, together with the number and types
+      of formal parameters that it takes.
+
+In OneRowNim we have created three constructors:
+  OneRowNime(), OneRowNim(int, int), OneRowNim(int, int, String, String)
+
+Each constructor contains a different signature.
+
+
+
++++++
+3.4 Retrieving Information from an Object
+
+We haven't created our access methods(getters) for OneRowNim yet.
+
+	public int getSticks() {
+		return nSticks;
+	}
+	
+	public int getPlayer() {
+		return player;
+	}
+
+	public String getPlayerOne() {
+		return playerOne;
+	}
+	
+	public String getPlayerTwo() {
+		return playerTwo;
+	}
+
+
+Getters look like:
+
+access returnType getInstanceVar() {
+    return instanceVar;
+}
+
+
+
+We can create methods that return computations as well:
+
+public boolean gameOver() {
+    return (nSticks <= 0);
+}
+
+True for game over, false for game still goin.
+
+
+
+---
+Invoking a Method That Returns a Value
+
+OneRowNim game = new OneRowNim(21);
+int sticksLeft = game.getSticks();
+
+
+Note: A nonvoid method call is an expression that has a value of a
+        particular type. After the method is execued, the method call
+	  expression becomes the value retured.
+
+
+
++++++
+3.5 Passing a Value and Passing a Reference
+
+The effect of passing arguments to a method differs depending on
+  whether we are passing the value of a primitive type or reference type value.
+  
+
+Primitive Types: Pass by Value
+
+When the argument of a primitive type is passed to a method, a copy
+  of the argument is passed to the formal parameter.
+
+
+
+Passing Reference Types
+
+When an argument of a reference type is passed to a method,
+  a copy of the reference to the object itself is assigned to the
+    parameter.
+
+
+
++++++
+3.6 Flow of Control: Control Structures
+
+
+---
+The Simple if Statement
+
+if(boolean statement)
+    doThis;
+
+The if statement is the most basic selection control structure.
+
+
+if(nSticks<=0)
+    System.out.println("Game Over");
+
+
+
+public class RainMonitor {
+    boolean isRaining = true;
+
+    if(isRaining) {
+        System.out.println("Bring an umbrella.");
+    } else {
+        System.out.println("Not raining currently.");
+    }
+
+
+
+---
+Relational Operators
+
+==, !=, <, >, <=, >=
+
+Rememeber: == for equality,
+           = for assignment.
+
+
+
+public String getPlayerString() {
+    if(player==1)
+	return playerOne;
+    if(player==2)
+	return playerTwo;
+    return "Player Error";
+}
+
+
+We must remember that when a return statement is executed in a method,
+  control is returned immediately to the calling method.
+
+If playe1==1 is true, then playerOne is returned to the calling method.
+If player==2 is true, then playerTwo is returned to the calling method.
+If those two are false, then the last statement is returned to the calling
+  method so that we can exit the control statement. It should never be reached.
+
+
+package conditionalExercises;
+
+public class RandomNumbers {
+
+    public static void main(String[] args) {
+        // get the random num
+        int num = (int) (Math.random() * 21) - 10;
+        System.out.println("Generated number: "+num);
+
+        // is num positive
+        if(num>0) {
+	    System.out.println("Number is positive.");
+        }
+
+        // is it zero
+        if(num==0) {
+	    System.out.println("The number is equal to zero.");
+        }
+		
+        // is it negative
+        if(num<0) {
+            System.out.println("The number is negative.");
+        }
+    }
+}
+
+
+
+---
+Compound Statements Inside if
+
+if(player==1) {
+    String str = "Player One";
+    System.out.println(str+" plays next.");
+    System.out.println("Keep playing.");
+}
+
+
+If the condition is met, all statements within the code block are evaluated.
+  Note that the local String variable str only has a scope within the block.
+
+
+
+---
+The if-else Statement
+
+if(booleanExpression)
+    statementOne;
+else
+    statementTwo;
+
+
+if(player==1)
+    System.out.println("Player One");
+else
+    System.out.println("Player Two");
+
+
+
+Multiway selection can be achieved through nested if-else statements.
+
+System.out.println("Nested if-else");
+Random rand = new Random();
+int randNum = rand.nextInt((3 - 0) + 1) + 0;
+if(randNum==1) {
+    System.out.println("Generated number equals "+randNum);
+} else if(randNum==2) {
+    System.out.println("Generated number equals "+randNum);
+} else if(randNum==3) {
+    System.out.println("Generated number equals "+randNum);
+} else {
+    System.out.println("Number is "+randNum);
+}
+
+
+// this works to
+int rndNum = (int) (Math.random() * 4);
+System.out.println("The number is "+rndNum);
+
+if(rndNum==0)
+    System.out.println("Zero");
+else if(rndNum==1)
+    System.out.println("One");
+else if(rndNum==2)
+    System.out.println("Two");
+else if(rndNum==3)
+    System.out.println("Three");
+else
+    System.out.println("Error: Unknown value");
+
+
+
+	public String getPlayerName() {
+		if(player==1)
+			return "Ann";
+		else if(player==2)
+			return "Bill";
+		else if(player==3)
+			return "Cal";
+		else
+			return "Error";
+	}
+
+
+
+---
+The while Structure
+
+while(conditional) {
+    doStuff;
+    Update;
+}
+
+
+A loop structure is a control structure that repeats a statement or sequence
+  of statements in a controlled way.
+
+package mathMethods;
+
+public class Sum {
+
+	public int sumSquares(int max) {
+		int num = 1;
+		int sum = 0;
+		
+		while(num<=max) {
+			sum = sum + num*num;
+			num = num + 1;
+		}
+		return sum;
+	}
+	
+	public static void main(String[] args) {
+		Sum s = new Sum();
+		int num = 10;
+		System.out.println("The sumSquares of "+num+" is "+s.sumSquares(num));
+	}
+}
+
+
+In order for the while loop to execute properly, the variable(s)
+  in the loop entry condition must be initialized correctly before the
+    while statement and these variables must be correctly updated at the
+      ennd of the body.
+
+
+A properly designed while structure must include an initializer, a loop
+  entry condition, and an updater. The update must allow for loop termination.
+
+
+The while loop is designed to handle 0 or more iterations because the
+  condition is tested before looping.
+
+
+HOLY FUCK THIS TOOK ME ALL DAY
+
+To find the sum of cubes of two given numbers:
+
+public int sumCubes(int min, int max) {
+    int num = min;
+    int sum = 0;
+		
+    while(num<=max) {
+        sum = sum + (num*num*num);
+        num += 1;
+    }
+    return sum;
+}
+
+
+
++++++
+3.7 Testing Extended OneRowNim
+
+
+---
+Using if-else Structures
+
+public boolean takeSticks(int num) {
+    if(num<1) {
+        return false;
+    } else if(num>3) {
+        return false;
+    } else {
+        nSticks = nSticks - num;
+	player = 3 - player;
+	return true;
+    }
+}
+
+
+We can see that if an invalid number is entered by the user,
+  false is returned and nothing is changed.
+
+When a valid number is input, the remaining sticks are calculated
+  and the player switches.
+
+
+
+Let's write a method that get the winner:
+
+public int getWinner() {
+    if(nSticks<1) {
+        return player;
+    } else {
+        return 0;
+    }
+}
+
+
+
+---
+Using a While Loop
+
+We want to accomplish this pseudocode in OneRowNim:
+
+Choose the initial number of sticks for the game.
+while the game is not over {
+    Report the state of the game
+    Process the next move
+}
+Report the state of the game
+Report who the winner is
+
+

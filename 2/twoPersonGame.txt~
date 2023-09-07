@@ -1,0 +1,113 @@
+2.5 CASE STUDY - Simulating a Two-Person Game
+
+The game we will consider is played by two persons with a row of sticks or coins or other objects.
+The players alternate turns. On each turn, the player must remove one, two, or three sticks from the row.
+Whoever removes the last stick loses.
+
+The game can be played with any number of sticks but starting with twenty one sticks is quite common.
+
+
+Specification: Design a class named OneRowNim that simulates a game of one row Nim.
+                 A OneRowNim object should keep track of whose turn it is and allow
+		   players to take one, two, or three sticks. It should sbe able to
+		     determine whether the game is over.
+
+
+
+++++++++++++++++++++
+PROBLEM DECOMPOSITION
+
+We can design OneRowNim so that it can be used with
+  different kinds of user interface:
+    -> P v P
+    -> P v C
+    -> KB and console interface
+    -> Graphical interface
+
+
+
+++++++++++++++++++++
+CLASS DESIGN
+
+We break our class definitions into two parts:
+  -> Instance variables, the information or attributes the object requires.
+  -> Instance methods, the behaviours an object has; actions it can take.
+
+Two pieces of information that vary as the game is played are
+  the number of sticks remaining and which player has the next turn:
+
+Variable Name    Type    Values
+nSticks          int     0-21
+player           int     1 or 2
+
+During gameplay, these instance variable values will represent
+  the state of the game: number of sticks remaining and whose turn it is.
+
+
+
+++++++++++++++++++++
+METHOD DECOMPOSITION
+
+One action we know of in the game is taking away 1-3 sticks.
+
+So we can make three methods that correspond with the number of sticks taken:
+  takeOne()
+  takeTwo()
+  takeThree()
+
+Each method will be responsible for reducing the value of nSticks,
+  as well as switching to the other player.
+
+We need another method that reports the state of the game:
+  report()
+
+
+-------------------
+|  OneRowNim       |
+-------------------|
+|  -nSticks:int=7  |
+|  -player:int=1   |
+-------------------|
+|  +takeOne()      |
+|  +takeTwo()      |
+|  +takeThree()    |
+|  +report()       |
+-------------------
+
+
+
+++++++++++++++++++++
+INSTANCE VARIABLES
+
+The body of a class definition consists of two parts: variables and methods.
+
+An instance variable is a variable that can be used throughout the class,
+  this makes it a class-level variable.
+
+We define our instance level variables first, then our methods:
+
+public class OneRowNim {
+    // instance variables
+    private String var1;
+    private int var2;
+    private double var3;
+
+    // instance methods
+    getThis() {
+        // this that
+    }
+    getThat() {
+        //this that
+    }
+
+    setThis() {
+        // this that
+    }
+    setThat() {
+        // this that
+    }
+
+    machineState() {
+        // state
+    }
+}
